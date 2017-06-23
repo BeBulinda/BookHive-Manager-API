@@ -75,6 +75,15 @@ class Users extends Database {
         return $info[0];
     }
 
+    public function fetchSelfPublisherDetails($code) {
+        $sql = "SELECT * FROM self_publishers WHERE id=:code";
+        $stmt = $this->prepareQuery($sql);
+        $stmt->bindParam("code", $code);
+        $stmt->execute();
+        $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $info[0];
+    }
+
     public function fetchPublisherDetails($code) {
         $sql = "SELECT * FROM publishers WHERE id=:code";
         $stmt = $this->prepareQuery($sql);
@@ -548,7 +557,6 @@ class Users extends Database {
         return true;
     }
     
-    
     public function getPublishers() {
         $sql = "SELECT id, company_name, status FROM publishers WHERE status=1021 "
                 . " ORDER BY id ASC";
@@ -562,6 +570,27 @@ class Users extends Database {
                 $html .= "<option value=\"{$row['id']}\" selected>{$row['company_name']}</option>";
             } else {
                 $html .= "<option value=\"{$row['id']}\">{$row['company_name']}</option>";
+            }
+        }
+        if ($html == "")
+            $html = "<option value=\"\">No publisher entered into the database!</option>";
+        echo $html;
+        return $currentGroup;
+    }
+    
+    public function getSelfPublishers() {
+        $sql = "SELECT id, firstname, lastname, status FROM self_publishers WHERE status=1021 "
+                . " ORDER BY id ASC";
+        $stmt = $this->prepareQuery($sql);
+        $stmt->execute();
+        $currentGroup = null;
+        $html = "";
+        while ($row = $stmt->fetch()) {
+            if (is_null($currentGroup)) {
+                $currentGroup = $row['id'];
+                $html .= "<option value=\"{$row['id']}\" selected>{$row['firstname']} {$row['firstname']}</option>";
+            } else {
+                $html .= "<option value=\"{$row['id']}\">{$row['firstname']} {$row['firstname']}</option>";
             }
         }
         if ($html == "")

@@ -13,19 +13,40 @@ class Books extends Database {
             return $this->editBook();
         }
     }
-    
+
     private function addBook() {
-        $sql = "INSERT INTO books (title, description, author, publisher, publication_year, isbn_number, type_id, level_id, price, cover_photo, createdby, lastmodifiedby)"
-                . " VALUES (:title, :description, :author, :publisher, :publication_year, :isbn_number, :type_id, :level_id, :price, :cover_photo, :createdby, :lastmodifiedby)";
+
+        $ecd_code = $this->getBookLevelRefTypeId("ECD");
+        $primary_code = $this->getBookLevelRefTypeId("PRIMARY LEVEL");
+        $secondary_code = $this->getBookLevelRefTypeId("SECONDARY LEVEL");
+        $adult_code = $this->getBookLevelRefTypeId("ADULT READER");
+
+        if ($_POST['book_level'] == $primary_code) {
+            $class = $_POST['primary_class'];
+        } else if ($_POST['book_level'] == $secondary_code) {
+            $class = $_POST['secondary_class'];
+        }
+
+        if ($_POST['publisher_type'] == "company") {
+            $publisher = $_POST['publisher'];
+        } else if ($_POST['publisher_type'] == "self") {
+            $publisher = $_POST['self_publisher'];
+        }
+
+        $sql = "INSERT INTO books (title, description, author, publisher_type, publisher, publication_year, isbn_number, type_id, level_id, class, print_type, price, cover_photo, createdby, lastmodifiedby)"
+                . " VALUES (:title, :description, :author, :publisher_type, :publisher, :publication_year, :isbn_number, :type_id, :level_id, :class, :print_type, :price, :cover_photo, :createdby, :lastmodifiedby)";
         $stmt = $this->prepareQuery($sql);
         $stmt->bindValue("title", strtoupper($_POST['title']));
         $stmt->bindValue("description", strtoupper($_POST['description']));
         $stmt->bindValue("author", strtoupper($_POST['author']));
-        $stmt->bindValue("publisher", $_POST['publisher']);
+        $stmt->bindValue("publisher_type", strtoupper($_POST['publisher_type']));
+        $stmt->bindValue("publisher", $publisher);
         $stmt->bindValue("publication_year", $_POST['publication_year']);
         $stmt->bindValue("isbn_number", strtoupper($_POST['isbn_number']));
         $stmt->bindValue("type_id", $_POST['book_type']);
         $stmt->bindValue("level_id", $_POST['book_level']);
+        $stmt->bindValue("class", strtoupper($class));   
+        $stmt->bindValue("print_type", strtoupper($_POST['print_type']));
         $stmt->bindValue("price", $_POST['price']);
         $stmt->bindValue("cover_photo", $_SESSION['filename']);
         $stmt->bindValue("createdby", $_POST['createdby']);
@@ -46,37 +67,13 @@ class Books extends Database {
             $_SESSION['yes_records'] = true;
             $values2 = array();
             foreach ($info as $data) {
-                $values = array("id" => $data['id'], "title" => $data['title'], "description" => $data['description'], "author" => $data['author'], "publisher" => $data['publisher'], "publication_year" => $data['publication_year'], "isbn_number" => $data['isbn_number'], "type_id" => $data['type_id'], "level_id" => $data['level_id'], "price" => $data['price'], "cover_photo" => $data['cover_photo'], "status" => $data['status'], "createdat" => $data['createdat'], "createdby" => $data['createdby'], "lastmodifiedat" => $data['lastmodifiedat'], "lastmodifiedby" => $data['lastmodifiedby']);
+                $values = array("id" => $data['id'], "title" => $data['title'], "description" => $data['description'], "author" => $data['author'], "publisher_type" => $data['publisher_type'], "publisher" => $data['publisher'], "publication_year" => $data['publication_year'], "isbn_number" => $data['isbn_number'], "type_id" => $data['type_id'], "level_id" => $data['level_id'], "price" => $data['price'], "cover_photo" => $data['cover_photo'], "status" => $data['status'], "createdat" => $data['createdat'], "createdby" => $data['createdby'], "lastmodifiedat" => $data['lastmodifiedat'], "lastmodifiedby" => $data['lastmodifiedby']);
                 array_push($values2, $values);
             }
             return json_encode($values2);
         }
     }
 
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     public function getStaffDetails($code) {
         $users = new Users();
         return $users->fetchStaffDetails($code);

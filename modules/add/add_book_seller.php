@@ -12,7 +12,11 @@ if (!empty($_POST)) {
     $extension = substr($logo_name, strpos($logo_name, '.') + 1);
     $logo = strtoupper($filename . '.' . $extension);
     $_SESSION['filename'] = $logo;
-    $location = 'modules/images/logos/book_sellers/';
+     
+    $url = "http://localhost/bookhive_web/";
+//    $url = "http://live_url/bookhive_web/";    
+    
+    $location = $url.'modules/images/logos/book_sellers/';
 
     if (move_uploaded_file($tmp_name, $location . $logo)) {
         $_SESSION['book_seller_company_name'] = $_POST['company_name'];

@@ -2,17 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/wamp/www/bookhive_ui/modules/add/add_piracy_report.php</file>
-            <file>file:/C:/wamp/www/bookhive_ui/modules/read/view_publishers.php</file>
-            <file>file:/C:/wamp/www/bookhive_ui/modules/add/add_book.php</file>
-            <file>file:/C:/wamp/www/bookhive_ui/modules/add/add_publisher.php</file>
-            <file>file:/C:/wamp/www/bookhive_ui/modules/classes/Users.php</file>
-            <file>file:/C:/wamp/www/bookhive_ui/modules/classes/Books.php</file>
-            <file>file:/C:/wamp/www/bookhive_ui/modules/add/add_book_seller.php</file>
-            <file>file:/C:/wamp/www/bookhive_ui/modules/read/view_book_sellers.php</file>
-            <file>file:/C:/wamp/www/bookhive_ui/modules/add/add_contact.php</file>
-            <file>file:/C:/wamp/www/bookhive_ui/modules/read/view_books.php</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

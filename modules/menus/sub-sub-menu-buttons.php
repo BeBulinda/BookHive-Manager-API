@@ -34,7 +34,7 @@ if (is_menu_set('?') != "") {
 } else if ((is_menu_set('view_inbox_messages') != "") OR ( is_menu_set('view_inbox_messages_notifications') != "")) {
     $request_url = "?view_inbox_messages";
     $action_holder = "View Inbox Messages";
-} else if ((is_menu_set('view_inbos') != "") OR ( is_menu_set('view_piracy_reports_notifications') != "")) {
+} else if ((is_menu_set('view_piracy_reports') != "") OR ( is_menu_set('view_piracy_reports_notifications') != "")) {
     $request_url = "?add_piracy_report";
     $action_holder = "Add Piracy Report";
 } else if ((is_menu_set('view_publishers') != "") OR ( is_menu_set('view_publishers_notifications') != "")) {
