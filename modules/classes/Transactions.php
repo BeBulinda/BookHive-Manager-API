@@ -11,7 +11,50 @@ class Transactions extends Database {
             return $this->addPiracyReport();
         }
     }
-    
+
+    public function assignPiracy($publisher_type, $publisher, $code) {
+        $sql = "UPDATE piracy_reports SET is_assigned=:is_assigned, assignedat=:assignedat, assignedby=:assignedby, assigned_publisher_type=:assigned_publisher_type, assigned_publisher=:assigned_publisher, status=1012 WHERE id=:code";
+        $stmt = $this->prepareQuery($sql);
+        $stmt->bindValue("code", $code);
+        $stmt->bindValue("is_assigned", 'YES');
+        $stmt->bindValue("assignedat", date("Y-m-d H:i:s"));
+        $stmt->bindValue("assignedby", 01); //  echo $_SESSION['userid']);
+        $stmt->bindValue("assigned_publisher_type", strtoupper($publisher_type));
+        $stmt->bindValue("assigned_publisher", $publisher);
+        if ($stmt->execute()) {
+            return true;
+        } else
+            return false;
+    }
+
+    public function deletePiracy($code) {
+        $sql = "UPDATE piracy_reports SET status=1000 WHERE id=:code";
+        $stmt = $this->prepareQuery($sql);
+        $stmt->bindValue("code", $code);
+        if ($stmt->execute()) {
+            return true;
+        } else
+            return false;
+    }
+
+    public function updateTransaction($item, $code, $update_type) {
+        if ($update_type == "deactivate") {
+            $sql = "UPDATE transactions SET status=1002, lastmodifiedby=:lastmodifiedby, lastmodifiedat=:lastmodifiedat WHERE id=:code";
+        } else if ($update_type == "activate") {
+            $sql = "UPDATE transactions SET status=1001, lastmodifiedby=:lastmodifiedby, lastmodifiedat=:lastmodifiedat WHERE id=:code";
+        } else if ($update_type == "delete") {
+            $sql = "UPDATE transactions SET status=1000, lastmodifiedby=:lastmodifiedby, lastmodifiedat=:lastmodifiedat WHERE id=:code";
+        }
+        $stmt = $this->prepareQuery($sql);
+        $stmt->bindValue("code", $code);
+        $stmt->bindValue("lastmodifiedby", 01); //  echo $_SESSION['userid']);
+        $stmt->bindValue("lastmodifiedat", date("Y-m-d H:i:s"));
+        if ($stmt->execute()) {
+            return true;
+        } else
+            return false;
+    }
+
     private function addPiracyReport() {
         $sql = "INSERT INTO piracy_reports (reporter_type, reported_by, seller_name, book_photo, receipt_photo, description)"
                 . " VALUES (:reporter_type, :reported_by, :seller_name, :book_photo, :receipt_photo, :description)";
@@ -25,7 +68,27 @@ class Transactions extends Database {
         $stmt->execute();
         return true;
     }
-    
+
+    public function getAllPublisherPiracyReports() {
+        $sql = "SELECT * FROM piracy_reports WHERE assigned_publisher=:assigned_publisher ORDER BY id ASC";
+        $stmt = $this->prepareQuery($sql);
+        $stmt->bindValue("assigned_publisher", $_SESSION['user_details']['level_ref_id']);
+        $stmt->execute();
+        $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (count($info) == 0) {
+            $_SESSION['no_records'] = true;
+        } else {
+            $_SESSION['yes_records'] = true;
+            $values2 = array();
+            foreach ($info as $data) {
+                $values = array("id" => $data['id'], "reporter_type" => $data['reporter_type'], "reported_by" => $data['reported_by'], "seller_name" => $data['seller_name'], "book_title" => $data['book_title'], "book_photo" => $data['book_photo'], "receipt_photo" => $data['receipt_photo'], "county" => $data['county'], "sub_county" => $data['sub_county'], "location" => $data['location'], "description" => $data['description'], "createdat" => $data['createdat'], "is_assigned" => $data['is_assigned'], "assignedat" => $data['assignedat'], "assignedby" => $data['assignedby'], "assigned_publisher_type" => $data['assigned_publisher_type'], "assigned_publisher" => $data['assigned_publisher'], "assigned_staff" => $data['assigned_staff'], "status" => $data['status']);
+                array_push($values2, $values);
+            }
+            return json_encode($values2);
+        }
+    }
+
     public function getAllPiracyReports() {
         $sql = "SELECT * FROM piracy_reports ORDER BY id ASC";
         $stmt = $this->prepareQuery($sql);
@@ -38,7 +101,7 @@ class Transactions extends Database {
             $_SESSION['yes_records'] = true;
             $values2 = array();
             foreach ($info as $data) {
-                $values = array("id" => $data['id'], "reporter_type" => $data['reporter_type'], "reported_by" => $data['reported_by'], "seller_name" => $data['seller_name'], "book_photo" => $data['book_photo'], "receipt_photo" => $data['receipt_photo'], "description" => $data['description'], "createdat" => $data['createdat'], "reviewedat" => $data['reviewedat'], "reviewedby" => $data['reviewedby'], "status" => $data['status']);
+                $values = array("id" => $data['id'], "reporter_type" => $data['reporter_type'], "reported_by" => $data['reported_by'], "seller_name" => $data['seller_name'], "book_title" => $data['book_title'], "book_photo" => $data['book_photo'], "receipt_photo" => $data['receipt_photo'], "county" => $data['county'], "sub_county" => $data['sub_county'], "location" => $data['location'], "description" => $data['description'], "createdat" => $data['createdat'], "is_assigned" => $data['is_assigned'], "assignedat" => $data['assignedat'], "assignedby" => $data['assignedby'], "assigned_publisher_type" => $data['assigned_publisher_type'], "assigned_publisher" => $data['assigned_publisher'], "assigned_staff" => $data['assigned_staff'], "status" => $data['status']);
                 array_push($values2, $values);
             }
             return json_encode($values2);
@@ -57,7 +120,7 @@ class Transactions extends Database {
             $_SESSION['yes_records'] = true;
             $values2 = array();
             foreach ($info as $data) {
-                $values = array("id" => $data['id'], "name" => $data['name'], "email" => $data['email'], "subject" => $data['subject'], "message" => $data['message'], "createdat" => $data['createdat'], "reviewedat" => $data['reviewedat'], "reviewedby" => $data['reviewedby'], "status" => $data['status']);
+                $values = array("id" => $data['id'], "name" => $data['name'], "email" => $data['email'], "subject" => $data['subject'], "message" => $data['message'], "createdat" => $data['createdat'], "is_assigned" => $data['is_assigned'], "assignedat" => $data['assignedat'], "assignedby" => $data['assignedby'], "assigned_publisher" => $data['assigned_publisher'], "assigned_staff" => $data['assigned_staff'], "status" => $data['status']);
                 array_push($values2, $values);
             }
             return json_encode($values2);
@@ -96,7 +159,7 @@ class Transactions extends Database {
             $_SESSION['yes_records'] = true;
             $values2 = array();
             foreach ($info as $data) {
-                $values = array("id" => $data['id'], "transaction_id" => $data['transaction_id'], "book_id" => $data['book_id'], "quantity" => $data['quantity'], "unit_price" => $data['unit_price'], "book_version" => $data['book_version'], "publisher_type" => $data['publisher_type'], "publisher" => $data['publisher'], "expireat" => $data['expireat']);
+                $values = array("id" => $data['id'], "transaction_id" => $data['transaction_id'], "book_id" => $data['book_id'], "quantity" => $data['quantity'], "unit_price" => $data['unit_price'], "print_type" => $data['print_type'], "publisher_type" => $data['publisher_type'], "publisher" => $data['publisher'], "expireat" => $data['expireat']);
                 array_push($values2, $values);
             }
             return json_encode($values2);
@@ -121,6 +184,5 @@ class Transactions extends Database {
             return json_encode($values2);
         }
     }
-
 
 }

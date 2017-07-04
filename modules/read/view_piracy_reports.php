@@ -1,5 +1,6 @@
 <?php
-if (!App::isLoggedIn()) App::redirectTo("?");
+if (!App::isLoggedIn())
+    App::redirectTo("?");
 require_once WPATH . "modules/classes/Transactions.php";
 $transactions = new Transactions();
 
@@ -31,11 +32,17 @@ unset($_SESSION['piracy_report']);
                                     <th><h5>Seller's Name</h5></th>
                                     <th><h5>Created At</h5></th>
                                     <th><h5>Status</h5></th>
+                                    <?php if (!isset($_SESSION['publisher_staff']) OR $_SESSION['publisher_staff'] <> true) { ?> 
+                                        <th><h5>Assign</h5></th>
+                                    <?php } ?>
+                                    <th><h5>Delete</h5></th>
                                 </tr>
-                                
+
                                 <?php
                                 if (!empty($_POST)) {
                                     $piracy_reports[] = $transactions->execute();
+                                } else if (isset($_SESSION['publisher_staff']) && $_SESSION['publisher_staff'] == true) {
+                                    $piracy_reports[] = $transactions->getAllPublisherPiracyReports();
                                 } else {
                                     $piracy_reports[] = $transactions->getAllPiracyReports();
                                 }
@@ -47,16 +54,20 @@ unset($_SESSION['piracy_report']);
                                     echo "<td> </td>";
                                     echo "<td> </td>";
                                     echo "<td> </td>";
+                                    if (!isset($_SESSION['publisher_staff'])) {
+                                        echo "<td> </td>";
+                                    }
+                                    echo "<td> </td>";
                                     echo "</tr>";
                                     unset($_SESSION['no_records']);
                                 } else if (isset($_SESSION['yes_records']) AND $_SESSION['yes_records'] == true) {
                                     foreach ($piracy_reports as $key => $value) {
                                         $inner_array[$key] = json_decode($value, true); // this will give key val pair array
                                         foreach ((array) $inner_array[$key] as $key2 => $value2) {
-                                                if ($value2['status'] == 1000) {
+                                            if ($value2['status'] == 1000) {
                                                 $status = "DELETED";
                                             } else if ($value2['status'] == 1001) {
-                                                $status = "AWAITING APPROVAL";
+                                                $status = "PENDING";
                                             } else if ($value2['status'] == 1002) {
                                                 $status = "NOT ACTIVE";
                                             } else if ($value2['status'] == 1021) {
@@ -65,6 +76,8 @@ unset($_SESSION['piracy_report']);
                                                 $status = "APPROVAL ACCEPTED";
                                             } else if ($value2['status'] == 1010) {
                                                 $status = "APPROVAL REJECTED";
+                                            } else if ($value2['status'] == 1012) {
+                                                $status = "ASSIGNED";
                                             }
                                             echo "<tr>";
                                             echo "<td> <a href='?individual_piracy_report&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
@@ -73,6 +86,14 @@ unset($_SESSION['piracy_report']);
                                             echo "<td>" . $value2['seller_name'] . "</td>";
                                             echo "<td>" . $value2['createdat'] . "</td>";
                                             echo "<td>" . $status . "</td>";
+                                            if (!isset($_SESSION['publisher_staff'])) {
+                                                if ($value2['status'] == 1012) {
+                                                    echo "<td> ASSIGNED </td>";
+                                                } else {
+                                                    echo "<td> <a href='?update_element&item=piracy&update_type=assign&code=" . $value2['id'] . "'> ASSIGN </td>";
+                                                }
+                                            }
+                                            echo "<td> <a href='?update_element&item=piracy&update_type=delete&code=" . $value2['id'] . "'> DELETE </td>";
                                             echo "</tr>";
                                         }
                                     }

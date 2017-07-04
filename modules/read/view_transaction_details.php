@@ -27,8 +27,10 @@ unset($_SESSION['transaction_detail']);
                                 <tr>
                                     <th><h5>Transaction ID</h5></th>
                                     <th><h5>Book ID</h5></th>
-                                    <th><h5>Quantity</h5></th>
+                                    <th><h5>Print Type</h5></th>
                                     <th><h5>Unit Price</h5></th>
+                                    <th><h5>Quantity</h5></th>
+                                    <th><h5>Publisher</h5></th>
                                 </tr>
 
                                 <?php
@@ -48,6 +50,8 @@ unset($_SESSION['transaction_detail']);
                                     echo "<td> </td>";
                                     echo "<td> </td>";
                                     echo "<td> </td>";
+                                    echo "<td> </td>";
+                                    echo "<td> </td>";
                                     echo "</tr>";
                                     unset($_SESSION['no_records']);
                                 } else if (isset($_SESSION['yes_records']) AND $_SESSION['yes_records'] == true) {
@@ -55,10 +59,13 @@ unset($_SESSION['transaction_detail']);
                                         $inner_array[$key] = json_decode($value, true); // this will give key val pair array
                                         foreach ((array) $inner_array[$key] as $key2 => $value2) {
                                             echo "<tr>";
-                                            echo "<td> <a href='?individual_transaction_detail&code=" . $value2['id'] . "'>" . $value2['transaction_id'] . "</td>";
+//                                            echo "<td> <a href='?individual_transaction_detail&code=" . $value2['id'] . "'>" . $value2['transaction_id'] . "</td>";
+                                            echo "<td>" . $value2['transaction_id'] . "</td>";
                                             echo "<td>" . $value2['book_id'] . "</td>";
-                                            echo "<td>" . $value2['quantity'] . "</td>";
+                                            echo "<td>" . $value2['print_type'] . "</td>";
                                             echo "<td>" . $value2['unit_price'] . "</td>";
+                                            echo "<td>" . $value2['quantity'] . "</td>";
+                                            echo "<td>" . $value2['publisher'] . "</td>";
                                             echo "</tr>";
                                         }
                                     }

@@ -14,8 +14,6 @@ class Users extends Database {
 //        } else if ($_POST['action'] == "forgot_password") {
 //            return $this->forgotPassword();
 //        } else 
-
-
         else if ($_POST['action'] == "add_publisher") {
             return $this->addPublisher();
         } else if ($_POST['action'] == "add_self_publisher") {
@@ -39,13 +37,12 @@ class Users extends Database {
         } else if ($_POST['action'] == "edit_individual_user") {
             return $this->editIndividualUser();
         }
-        
+
 //        else if ($_POST['action'] == "add_guest_user") {
 //            return $this->addGuestUser();
 //        } else if ($_POST['action'] == "edit_guest_user") {
 //            return $this->editGuestUser();
 //        }
-        
         else if ($_POST['action'] == "add_contact") {
             return $this->addContact();
         } else if ($_POST['action'] == "edit_contact") {
@@ -469,7 +466,7 @@ class Users extends Database {
         $stmt->bindValue("createdby", $createdby);
         $stmt->bindValue("lastmodifiedby", $createdby); //  echo $_SESSION['userid']);
         $stmt->execute();
-        
+
         //User Login details
         $sql_userlogs = "INSERT INTO user_logs (ref_type, ref_id, username, password)"
                 . " VALUES (:ref_type, :ref_id, :username, :password)";
@@ -497,7 +494,7 @@ class Users extends Database {
                 . "Visit <a href='http://www.bookhivekenya.com'>bookhivekenya.com</a> for more information.<br/>"
 //                . "Powered by: <img style='vertical-align: middle;' src='http://www.kitambulisho.com/images/reflex_logo_black.png' width='50' alt='Reflex Concepts Logo'>"
                 . "</body></html>";
-        
+
         mail(strtoupper($_POST['admin_email']), $subject, $message, $headers);
 
         return true;
@@ -596,7 +593,6 @@ class Users extends Database {
         $individual_user_id = $this->getNextIndividualUserId();
         $user_type_ref_id = $this->getUserTypeRefId($_SESSION['user_type']);
 //        $user_type_ref_id = $this->getUserTypeRefId("INDIVIDUAL USER");
-
         //individual details
         $sql = "INSERT INTO individual_users (firstname, lastname, gender, idnumber, createdby, lastmodifiedby)"
                 . " VALUES (:firstname, :lastname, :gender, :idnumber, :createdby, :lastmodifiedby)";
@@ -613,7 +609,7 @@ class Users extends Database {
         $sql = "INSERT INTO contacts (reference_type, reference_id, phone_number, email, postal_number, postal_code, town, county, sub_county, location, landmark_feature, lastmodifiedby)"
                 . " VALUES (:reference_type, :reference_id, :phone_number, :email, :postal_number, :postal_code, :town, :county, :sub_county, :location, :landmark_feature, :lastmodifiedby)";
         $stmt = $this->prepareQuery($sql);
-        $stmt->bindValue("reference_type",$user_type_ref_id);
+        $stmt->bindValue("reference_type", $user_type_ref_id);
         $stmt->bindValue("reference_id", $individual_user_id);
         $stmt->bindValue("phone_number", strtoupper($_SESSION['phone_number']));
         $stmt->bindValue("email", strtoupper($_SESSION['email']));
@@ -716,7 +712,7 @@ class Users extends Database {
         $createdby = $_POST['createdby'];
         $staff_id = $this->getNextStaffId();
         $user_type_ref_id = $this->getUserTypeRefId($_SESSION['user_type']);
-        
+
         //staff details
         $sql = "INSERT INTO staff (firstname, lastname, gender, idnumber, level_type, level_ref_id, createdby, lastmodifiedby)"
                 . " VALUES (:firstname, :lastname, :gender, :idnumber, :level_type, :level_ref_id, :createdby, :lastmodifiedby)";
@@ -897,16 +893,25 @@ class Users extends Database {
             $stmt2->bindValue("user_ref", $data['id']);
             $stmt2->bindValue("login_time", date("Y-m-d H:i:s"));
             $stmt2->execute();
-            
+
             $_SESSION['userid'] = App::cleanText($data['ref_id']);
-            $_SESSION['login_user_type'] = $data['ref_type'];            
+            $_SESSION['login_user_type'] = $data['ref_type'];
             $_SESSION['logged_in_user_type_details'] = $this->fetchUserTypeDetails($_SESSION['login_user_type']);
             $_SESSION['logged_in_user_details'] = $this->fetchLoggedInUserDetails($data['id']);
-            
+
             if ($_SESSION['logged_in_user_type_details']['name'] == "STAFF") {
                 $_SESSION['user_details'] = $this->fetchStaffDetails($_SESSION['userid']);
                 $_SESSION['profile_link'] = "?view_staff_individual&code=" . $_SESSION['userid'];
                 $_SESSION['contacts'] = $this->fetchIndividualContactDetails($_SESSION['login_user_type'], $_SESSION['userid']);
+
+                if ($_SESSION['user_details']['level_type'] == $this->getUserTypeRefId("PUBLISHER")) {
+                    $_SESSION['publisher_staff'] = true;
+                    $_SESSION['institution_details'] = $this->fetchPublisherDetails($_SESSION['user_details']['level_ref_id']);
+                } else if ($_SESSION['user_details']['level_type'] == $this->getUserTypeRefId("BOOK SELLER")) {
+                    $_SESSION['book_seller_staff'] = true;
+                } else if ($_SESSION['user_details']['level_type'] == $this->getUserTypeRefId("BOOKHIVE")) {
+                    $_SESSION['bookhive_staff'] = true;
+                }
             } else if ($_SESSION['logged_in_user_type_details']['name'] == "PUBLISHER") {
                 $_SESSION['user_details'] = $this->fetchSystemAdministratorDetails($_SESSION['userid']);
                 $_SESSION['profile_link'] = "?view_system_administrators_individual&code=" . $_SESSION['userid'];

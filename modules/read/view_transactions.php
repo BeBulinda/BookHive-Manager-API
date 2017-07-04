@@ -85,7 +85,7 @@ unset($_SESSION['transaction']);
 //                                            echo "<td> <a href='?update_transaction&update_type=edit&code=" . $value2['id'] . "'> EDIT </td>";
 
                                             if ($value2['status'] == 1001) {
-                                                echo "<td> <a href='?update_transaction&update_type=accept_approval&code=" . $value2['id'] . "'> APPROVE </td>";
+                                                echo "<td> <a href='?update_element&item=transaction&update_type=accept_approval&code=" . $value2['id'] . "'> APPROVE </td>";
                                                 echo "<td> <a href='?update_transaction&update_type=reject_approval&code=" . $value2['id'] . "'> REJECT </td>";
                                             }
 
@@ -95,7 +95,7 @@ unset($_SESSION['transaction']);
                                                 echo "<td> <a href='?update_transaction&update_type=deactivate&code=" . $value2['id'] . "'> DEACTIVATE </td>";
                                             }
 
-                                            echo "<td> <a href='?update_transaction&update_type=delete&code=" . $value2['id'] . "'> DElETE </td>";
+                                            echo "<td> <a href='?update_transaction&update_type=delete&code=" . $value2['id'] . "'> DELETE </td>";
 
                                             echo "</tr>";
                                         }

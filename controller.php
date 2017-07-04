@@ -114,6 +114,11 @@ else if ( is_menu_set('update_book') != ""){
     $currentPage = WPATH . "modules/update/update_book.php";
     set_title("Bookhive | Update Book");
 }
+
+else if ( is_menu_set('update_element') != ""){
+    $currentPage = WPATH . "modules/update/update_element.php";
+    set_title("Bookhive | Update Book");
+}
 else if ( is_menu_set('update_book_level') != ""){
     $currentPage = WPATH . "modules/update/update_book_level.php";
     set_title("Bookhive | Update Book Level");

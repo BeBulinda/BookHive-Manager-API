@@ -62,8 +62,8 @@ if (is_menu_set('?') != "") {
     $request_url = "?add_sub_county";
     $action_holder = "Add Sub-County";
 } else if ((is_menu_set('view_system_administrators') != "") OR ( is_menu_set('view_system_administrators_notifications') != "")) {
-    $request_url = "?add_system_administrator";
-    $action_holder = "Add System Administrator";
+    $request_url = "?view_system_administrators";
+    $action_holder = "View System Administrators";
 } else if ((is_menu_set('view_system_components') != "") OR ( is_menu_set('view_system_components_notifications') != "")) {
     $request_url = "?add_system_component";
     $action_holder = "Add System Component";
