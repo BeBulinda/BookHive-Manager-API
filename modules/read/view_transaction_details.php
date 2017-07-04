@@ -1,7 +1,5 @@
 <?php
-//if (!App::isLoggedIn()) {
-//    App::redirectTo("?");
-//}
+if (!App::isLoggedIn()) App::redirectTo("?");
 require_once WPATH . "modules/classes/Transactions.php";
 $transactions = new Transactions();
 
@@ -32,12 +30,17 @@ unset($_SESSION['transaction_detail']);
                                     <th><h5>Quantity</h5></th>
                                     <th><h5>Unit Price</h5></th>
                                 </tr>
-                                
+
                                 <?php
                                 if (!empty($_POST)) {
                                     $transaction_details[] = $transactions->execute();
                                 } else {
-                                    $transaction_details[] = $transactions->getAllTransactionDetails();
+                                    if (is_menu_set('view_individual_transaction') != "") {
+                                        $transaction_id = $_GET['code'];
+                                        $transaction_details[] = $transactions->getTransactionDetails($transaction_id);
+                                    } else {
+                                        $transaction_details[] = $transactions->getAllTransactionDetails();
+                                    }
                                 }
                                 if (isset($_SESSION['no_records']) AND $_SESSION['no_records'] == true) {
                                     echo "<tr>";
@@ -51,19 +54,6 @@ unset($_SESSION['transaction_detail']);
                                     foreach ($transaction_details as $key => $value) {
                                         $inner_array[$key] = json_decode($value, true); // this will give key val pair array
                                         foreach ((array) $inner_array[$key] as $key2 => $value2) {
-                                                if ($value2['status'] == 1000) {
-                                                $status = "DELETED";
-                                            } else if ($value2['status'] == 1001) {
-                                                $status = "AWAITING APPROVAL";
-                                            } else if ($value2['status'] == 1002) {
-                                                $status = "NOT ACTIVE";
-                                            } else if ($value2['status'] == 1021) {
-                                                $status = "ACTIVE";
-                                            } else if ($value2['status'] == 1011) {
-                                                $status = "APPROVAL ACCEPTED";
-                                            } else if ($value2['status'] == 1010) {
-                                                $status = "APPROVAL REJECTED";
-                                            }
                                             echo "<tr>";
                                             echo "<td> <a href='?individual_transaction_detail&code=" . $value2['id'] . "'>" . $value2['transaction_id'] . "</td>";
                                             echo "<td>" . $value2['book_id'] . "</td>";

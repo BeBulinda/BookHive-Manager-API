@@ -1,15 +1,15 @@
 <?php
 if (!App::isLoggedIn()) App::redirectTo("?");
-require_once WPATH . "modules/classes/System_Administration.php";
-$system_administration = new System_Administration();
+require_once WPATH . "modules/classes/Users.php";
+$users = new Users();
 
-unset($_SESSION['location']);
+unset($_SESSION['publisher']);
 ?>
 
 <div id="content">
     <div id="content-header">
-        <div id="breadcrumb"> <a href="?home" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="?view_locations" class="current">Locations</a> </div>
-        <h1>Locations</h1>
+        <div id="breadcrumb"> <a href="?home" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="?view_self_publishers" class="current">Self Publishers</a> </div>
+        <h1>Self Publishers</h1>
     </div>
     <div class="container-fluid">
         <hr>
@@ -17,26 +17,37 @@ unset($_SESSION['location']);
             <div class="span12">
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
-                        <h5>Locations</h5>
+                        <h5>Self Publishers</h5>
                         <?php require_once('modules/menus/sub-sub-menu-buttons.php'); ?>
                     </div>
+
+                    <?php
+                    if (isset($_SESSION['add_success'])) {
+                        echo "Record successfully added...";
+                        unset($_SESSION['add_success']);
+                    } else if (!empty($_POST)) {
+                        echo "Error adding record...";
+                    }
+                    ?>
+
                     <div class="widget-content nopadding">
 
                         <table class="table table-bordered data-table">
                             <tbody>
                                 <tr>
                                     <th><h5>ID</h5></th>
-                                    <th><h5>Name</h5></th>
-                                    <th><h5>County</h5></th>
-                                    <th><h5>Sub-County</h5></th>
+                                    <th><h5>First Name</h5></th>
+                                    <th><h5>Last Name</h5></th>
+                                    <th><h5>Gender</h5></th>
+                                    <th><h5>Created At</h5></th>
                                     <th><h5>Status</h5></th>
                                 </tr>
-                                
+
                                 <?php
                                 if (!empty($_POST)) {
-                                    $locations[] = $system_administration->execute();
+                                    $publishers[] = $users->execute();
                                 } else {
-                                    $locations[] = $system_administration->getAllLocations();
+                                    $publishers[] = $users->getAllSelfPublishers();
                                 }
                                 if (isset($_SESSION['no_records']) AND $_SESSION['no_records'] == true) {
                                     echo "<tr>";
@@ -45,10 +56,11 @@ unset($_SESSION['location']);
                                     echo "<td> </td>";
                                     echo "<td> </td>";
                                     echo "<td> </td>";
+                                    echo "<td> </td>";
                                     echo "</tr>";
                                     unset($_SESSION['no_records']);
                                 } else if (isset($_SESSION['yes_records']) AND $_SESSION['yes_records'] == true) {
-                                    foreach ($locations as $key => $value) {
+                                    foreach ($publishers as $key => $value) {
                                         $inner_array[$key] = json_decode($value, true); // this will give key val pair array
                                         foreach ((array) $inner_array[$key] as $key2 => $value2) {
                                                 if ($value2['status'] == 1000) {
@@ -65,11 +77,11 @@ unset($_SESSION['location']);
                                                 $status = "APPROVAL REJECTED";
                                             }
                                             echo "<tr>";
-                                            echo "<td> <a href='?individual_location&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
-                                            echo "<td>" . $value2['name'] . "</td>";
-                                            echo "<td> 1 </td>";
-//                                            echo "<td>" . $value2['county'] . "</td>";
-                                            echo "<td>" . $value2['sub_county_id'] . "</td>";
+                                            echo "<td> <a href='?individual_self_publisher&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+                                            echo "<td>" . $value2['firstname'] . "</td>";
+                                            echo "<td>" . $value2['lastname'] . "</td>";
+                                            echo "<td>" . $value2['gender'] . "</td>";
+                                            echo "<td>" . $value2['createdat'] . "</td>";
                                             echo "<td>" . $status . "</td>";
                                             echo "</tr>";
                                         }

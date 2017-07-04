@@ -14,6 +14,83 @@ class Books extends Database {
         }
     }
 
+    public function sendHttpRequestPost($data_string) {
+        $url = 'http://localhost/bookhive_web/?admin_requests&';
+//        $url = 'http://test.bookhive/?admin_requests&';
+        $header = array('Content-Type: multipart/form-data');
+
+
+
+//$fields = array('file' => '@' . $_FILES['file']['tmp_name'][0]);
+//$token = 'NfxoS9oGjA6MiArPtwg4aR3Cp4ygAbNA2uv6Gg4m'; 
+//$resource = curl_init();
+//curl_setopt($resource, CURLOPT_URL, $url);
+//curl_setopt($resource, CURLOPT_HTTPHEADER, $header);
+//curl_setopt($resource, CURLOPT_RETURNTRANSFER, 1);
+//curl_setopt($resource, CURLOPT_POST, 1);
+//curl_setopt($resource, CURLOPT_POSTFIELDS, $fields);
+////curl_setopt($resource, CURLOPT_COOKIE, 'apiToken=' . $token);
+//$result = json_decode(curl_exec($resource));
+//curl_close($resource);
+
+
+        $curl_session = curl_init();
+        curl_setopt($curl_session, CURLOPT_URL, $url);
+        curl_setopt($curl_session, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($curl_session, CURLOPT_POST, true);
+        curl_setopt($curl_session, CURLOPT_POSTFIELDS, $data_string);
+        curl_setopt($curl_session, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($curl_session);
+        curl_close($curl_session);
+        return $response;
+    }
+
+    public function uploadBookPhoto($tmp_name, $location) {
+
+        $url = 'http://localhost/bookhive_web/?admin_requests&';
+//        $url = 'http://test.bookhive/?admin_requests&';
+        $header = array('Content-Type: multipart/form-data');
+
+
+        $ch = curl_init($url);  // Create a cURL handle
+        $cfile = new CURLFile('cats.jpg', 'image/jpeg', 'test_name');  // Create a CURLFile object
+// Assign POST data
+        $data = array('test_file' => $cfile);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+
+
+// Execute the handle
+        curl_exec($ch);
+
+
+        $data['request_type'] = "upload_book_photo";
+        $data['fields'] = array('file' => '@' . $tmp_name[0]);
+//        $data['tmp_name'] = $tmp_name;
+        $data['location'] = $location;
+        $data_string = http_build_query($data);
+        $process_request = $this->sendHttpRequestPost($data_string);
+        if ($process_request) {
+            $decoded_response = json_decode($process_request, true);
+            $response['status'] = $decoded_response['status'];
+            $response['message'] = $decoded_response['message'];
+        } else {
+            $response['status'] = 400;
+            $response['message'] = "Sorry: There was an error processing the request. Please try again later";
+        }
+        return $response;
+    }
+
+    public function getBookLevelRefTypeId($level) {
+        $sql = "SELECT id, status FROM book_levels WHERE name=:level";
+        $stmt = $this->prepareQuery($sql);
+        $stmt->bindValue("level", $level);
+        $stmt->execute();
+        $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $data = $data[0];
+        return strtoupper($data['id']);
+    }
+
     private function addBook() {
 
         $ecd_code = $this->getBookLevelRefTypeId("ECD");
@@ -25,6 +102,8 @@ class Books extends Database {
             $class = $_POST['primary_class'];
         } else if ($_POST['book_level'] == $secondary_code) {
             $class = $_POST['secondary_class'];
+        } else {
+            $class = 100;
         }
 
         if ($_POST['publisher_type'] == "company") {
@@ -45,7 +124,7 @@ class Books extends Database {
         $stmt->bindValue("isbn_number", strtoupper($_POST['isbn_number']));
         $stmt->bindValue("type_id", $_POST['book_type']);
         $stmt->bindValue("level_id", $_POST['book_level']);
-        $stmt->bindValue("class", strtoupper($class));   
+        $stmt->bindValue("class", strtoupper($class));
         $stmt->bindValue("print_type", strtoupper($_POST['print_type']));
         $stmt->bindValue("price", $_POST['price']);
         $stmt->bindValue("cover_photo", $_SESSION['filename']);

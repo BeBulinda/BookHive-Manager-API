@@ -1,7 +1,5 @@
 <?php
-//if (!App::isLoggedIn()) {
-//    App::redirectTo("?");
-//}
+if (!App::isLoggedIn()) App::redirectTo("?");
 require_once WPATH . "modules/classes/Transactions.php";
 $transactions = new Transactions();
 
@@ -28,15 +26,16 @@ unset($_SESSION['transaction']);
                             <tbody>
                                 <tr>
                                     <th><h5>Transaction ID</h5></th>
-                                    <th><h5>Transacted By</h5></th>   
+                                    <th><h5>Buyer Type</h5></th> 
+                                    <th><h5>Buyer's Name</h5></th> 
                                     <th><h5>Amount</h5></th>                                 
                                     <th><h5>Payment Option</h5></th>
 <!--                                    <th><h5>Created At</h5></th>
                                     <th><h5>Status</h5></th>-->
-                                    <th><h5>Update</h5></th>
+                                    <!--<th><h5>Update</h5></th>-->
                                     <th><h5>Approve</h5></th>
                                     <th><h5>Reject</h5></th>
-                                    <th><h5>Activate</h5></th>
+                                    <!--<th><h5>Activate</h5></th>-->
                                     <th><h5>Delete</h5></th>
                                 </tr>
 
@@ -49,6 +48,8 @@ unset($_SESSION['transaction']);
                                 if (isset($_SESSION['no_records']) AND $_SESSION['no_records'] == true) {
                                     echo "<tr>";
                                     echo "<td>  No record found...</td>";
+                                    echo "<td> </td>";
+                                    echo "<td> </td>";
                                     echo "<td> </td>";
                                     echo "<td> </td>";
                                     echo "<td> </td>";
@@ -74,13 +75,14 @@ unset($_SESSION['transaction']);
                                                 $status = "APPROVAL REJECTED";
                                             }
                                             echo "<tr>";
-                                            echo "<td> <a href='?individual_transaction&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
-                                            echo "<td>" . $value2['transactedby'] . "</td>";
+                                            echo "<td> <a href='?view_individual_transaction&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+                                            echo "<td>" . $value2['buyer_type'] . "</td>";
+                                            echo "<td>" . $value2['buyer_id'] . "</td>";
                                             echo "<td>" . $value2['amount'] . "</td>";
                                             echo "<td>" . $value2['payment_option'] . "</td>";
 //                                            echo "<td>" . $value2['createdat'] . "</td>";
 //                                            echo "<td>" . $status . "</td>";
-                                            echo "<td> <a href='?update_transaction&update_type=edit&code=" . $value2['id'] . "'> EDIT </td>";
+//                                            echo "<td> <a href='?update_transaction&update_type=edit&code=" . $value2['id'] . "'> EDIT </td>";
 
                                             if ($value2['status'] == 1001) {
                                                 echo "<td> <a href='?update_transaction&update_type=accept_approval&code=" . $value2['id'] . "'> APPROVE </td>";

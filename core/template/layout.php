@@ -58,21 +58,14 @@ date_default_timezone_set("Africa/Nairobi");
     <body class="skin-black">
 
         <?php
-//        if (App::isLoggedIn()) { 
-//            require_once "header.php";
-//        }
-
-        require_once "header.php";
-
-        require_once "modules/menus/main_sidebar.php";
-
+        if (App::isLoggedIn()) {
+            require_once "header.php";
+            require_once "modules/menus/main_sidebar.php";
+        }
         require_once $currentPage;
-
-        require_once "footer.php";
-
-//        if (App::isLoggedIn()) {
-//            require_once "footer.php";
-//        }
+        if (App::isLoggedIn()) {
+            require_once "footer.php";
+        }
         ?>
 
         <!-- Basic scripts -->  
@@ -143,9 +136,9 @@ date_default_timezone_set("Africa/Nairobi");
         ?>
         <?php if (!App::isLoggedIn()) { ?>
             <script>
-                jQuery(document).ready(function () {
-                    App.initLogin();
-                });
+            jQuery(document).ready(function () {
+                App.initLogin();
+            });
             </script>
         <?php } else { ?>
             <script>

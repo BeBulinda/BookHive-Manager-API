@@ -1,7 +1,5 @@
 <?php
-//if (!App::isLoggedIn()) {
-//    App::redirectTo("?");
-//}
+if (!App::isLoggedIn()) App::redirectTo("?");
 require_once WPATH . "modules/classes/Users.php";
 $users = new Users();
 
@@ -22,14 +20,24 @@ unset($_SESSION['staff']);
                         <h5>Staff Members</h5>
                         <?php require_once('modules/menus/sub-sub-menu-buttons.php'); ?>
                     </div>
+                    
+                    <?php
+                    if (isset($_SESSION['add_success'])) {
+                        echo "Record successfully added...";
+                        unset($_SESSION['add_success']);
+                    } else if (!empty($_POST)) {
+                        echo "Error adding record...";
+                    }
+                    ?>
+                    
                     <div class="widget-content nopadding">
 
                         <table class="table table-bordered data-table">
                             <tbody>
                                 <tr>
                                     <th><h5>Name</h5></th>
-                                    <th><h5>Publisher</h5></th>
-                                    <th><h5>Role</h5></th>
+                                    <th><h5>Staff Level</h5></th>
+                                    <th><h5>Institution</h5></th>
                                     <th><h5>Created At</h5></th>
                                     <th><h5>Status</h5></th>
                                 </tr>
@@ -68,8 +76,8 @@ unset($_SESSION['staff']);
                                             }
                                             echo "<tr>";
                                             echo "<td> <a href='?individual_staff&code=" . $value2['id'] . "'>" . $value2['firstname'] . " " . $value2['lastname'] . "</td>";
-                                            echo "<td>" . $value2['publisher'] . "</td>";
-                                            echo "<td>" . $value2['role'] . "</td>";
+                                            echo "<td>" . $value2['level_type'] . "</td>";
+                                            echo "<td>" . $value2['level_ref_id'] . "</td>";
                                             echo "<td>" . $value2['createdat'] . "</td>";
                                             echo "<td>" . $status . "</td>";
                                             echo "</tr>";

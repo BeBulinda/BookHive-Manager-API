@@ -1,7 +1,5 @@
 <?php
-//if (!App::isLoggedIn()) {
-//    App::redirectTo("?");
-//}
+if (!App::isLoggedIn()) App::redirectTo("?");
 require_once WPATH . "modules/classes/Users.php";
 $users = new Users();
 
@@ -22,6 +20,16 @@ unset($_SESSION['book_seller']);
                         <h5>Book Sellers</h5>
                         <?php require_once('modules/menus/sub-sub-menu-buttons.php'); ?>
                     </div>
+                    
+                    <?php
+                    if (isset($_SESSION['add_success'])) {
+                        echo "Record successfully added...";
+                        unset($_SESSION['add_success']);
+                    } else if (!empty($_POST)) {
+                        echo "Error adding record...";
+                    }
+                    ?>
+                    
                     <div class="widget-content nopadding">
 
                         <table class="table table-bordered data-table">

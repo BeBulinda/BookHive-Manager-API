@@ -14,8 +14,8 @@ if (is_menu_set('?') != "") {
     $request_url = "?add_book_type";
     $action_holder = "Add Book Type";
 } else if ((is_menu_set('view_contacts') != "") OR ( is_menu_set('view_contacts_notifications') != "")) {
-    $request_url = "?add_contact";
-    $action_holder = "Add Contact";
+    $request_url = "#";
+    $action_holder = "View Contacts";
 } else if ((is_menu_set('view_counties') != "") OR ( is_menu_set('view_counties_notifications') != "")) {
     $request_url = "?add_county";
     $action_holder = "Add County";
@@ -32,14 +32,23 @@ if (is_menu_set('?') != "") {
     $request_url = "?add_payment_option";
     $action_holder = "Add Payment Option";
 } else if ((is_menu_set('view_inbox_messages') != "") OR ( is_menu_set('view_inbox_messages_notifications') != "")) {
-    $request_url = "?view_inbox_messages";
+    $request_url = "#";
     $action_holder = "View Inbox Messages";
 } else if ((is_menu_set('view_piracy_reports') != "") OR ( is_menu_set('view_piracy_reports_notifications') != "")) {
-    $request_url = "?add_piracy_report";
-    $action_holder = "Add Piracy Report";
+    $request_url = "#";
+    $action_holder = "View Piracy Reports";
 } else if ((is_menu_set('view_publishers') != "") OR ( is_menu_set('view_publishers_notifications') != "")) {
     $request_url = "?add_publisher";
     $action_holder = "Add Publisher";
+} else if ((is_menu_set('view_self_publishers') != "") OR ( is_menu_set('view_self_publishers_notifications') != "")) {
+    $request_url = "?add_self_publisher";
+    $action_holder = "Add Self Publisher";
+} else if ((is_menu_set('view_schools') != "") OR ( is_menu_set('view_schools_notifications') != "")) {
+    $request_url = "#";
+    $action_holder = "Add School";
+} else if ((is_menu_set('view_corporates') != "") OR ( is_menu_set('view_corporates_notifications') != "")) {
+    $request_url = "#";
+    $action_holder = "Add Corporate";
 } else if ((is_menu_set('view_roles') != "") OR ( is_menu_set('view_roles_notifications') != "")) {
     $request_url = "?add_role";
     $action_holder = "Add Role";
@@ -62,11 +71,11 @@ if (is_menu_set('?') != "") {
     $request_url = "?add_system_privilege";
     $action_holder = "Add System Privilege";
 } else if ((is_menu_set('view_transactions') != "") OR ( is_menu_set('view_transactions_notifications') != "")) {
-    $request_url = "?add_transaction";
-    $action_holder = "Add Transaction";
-} else if ((is_menu_set('view_transaction_details') != "") OR ( is_menu_set('view_transaction_details_notifications') != "")) {
-    $request_url = "?add_transaction";
-    $action_holder = "Add Transaction";
+    $request_url = "#";
+    $action_holder = "View Transactions";
+} else if ((is_menu_set('view_transaction_details') != "") OR ( is_menu_set('view_individual_transaction')) OR ( is_menu_set('view_transaction_details_notifications') != "")) {
+    $request_url = "?view_transactions";
+    $action_holder = "All Transactions";
 }
 
 //else if (is_menu_set('view_user_privileges') != "") {

@@ -3,13 +3,24 @@
 require WPATH . "core/include.php";
 $currentPage = "";
 
-//if ( is_menu_set('logout') != "" ) 
-//    App::logOut();
-if ( is_menu_set('home') != ""){
-    $currentPage = WPATH . "modules/home.php";
-    set_title("Bookhive | Home");
+if (is_menu_set('logout') != "") 
+    App::logOut();
+else if (is_menu_set('home') != "") {
+    $currentPage = WPATH . "modules/login.php";
+    set_title("Bookhive | Login");
 }
-
+else if (is_menu_set('dashboard') != "") {
+    $currentPage = WPATH . "modules/home.php";
+    set_title("Bookhive | Dashboard");
+}
+else if (is_menu_set('forgot_password') != "") {
+    $currentPage = WPATH . "modules/forgot_password.php";
+    set_title("StaqPesa | Update Password");
+} 
+else if (is_menu_set('forgot_password_next') != "") {
+    $currentPage = WPATH . "modules/forgot_password_next.php";
+    set_title("StaqPesa | Update Password");
+}
 else if ( is_menu_set('add_book') != ""){
     $currentPage = WPATH . "modules/add/add_book.php";
     set_title("Bookhive | Add Book");
@@ -34,10 +45,10 @@ else if ( is_menu_set('add_county') != ""){
     $currentPage = WPATH . "modules/add/add_county.php";
     set_title("Bookhive | Add County");
 }
-else if ( is_menu_set('add_guest_user') != ""){
-    $currentPage = WPATH . "modules/add/add_guest_user.php";
-    set_title("Bookhive | Add Guest User");
-}
+//else if ( is_menu_set('add_guest_user') != ""){
+//    $currentPage = WPATH . "modules/add/add_guest_user.php";
+//    set_title("Bookhive | Add Guest User");
+//}
 else if ( is_menu_set('add_individual_user') != ""){
     $currentPage = WPATH . "modules/add/add_individual_user.php";
     set_title("Bookhive | Add Individual User");
@@ -57,6 +68,10 @@ else if ( is_menu_set('add_piracy_report') != ""){
 else if ( is_menu_set('add_publisher') != ""){
     $currentPage = WPATH . "modules/add/add_publisher.php";
     set_title("Bookhive | Add Publisher");
+}
+else if ( is_menu_set('add_self_publisher') != ""){
+    $currentPage = WPATH . "modules/add/add_self_publisher.php";
+    set_title("Bookhive | Add Self Publisher");
 }
 else if ( is_menu_set('add_role') != ""){
     $currentPage = WPATH . "modules/add/add_role.php";
@@ -86,10 +101,10 @@ else if ( is_menu_set('add_system_privilege') != ""){
     $currentPage = WPATH . "modules/add/add_system_privilege.php";
     set_title("Bookhive | Add System Privilege");
 }
-else if ( is_menu_set('add_transaction') != ""){
-    $currentPage = WPATH . "modules/add/add_transaction.php";
-    set_title("Bookhive | Add Transaction");
-}
+//else if ( is_menu_set('add_transaction') != ""){
+//    $currentPage = WPATH . "modules/add/add_transaction.php";
+//    set_title("Bookhive | Add Transaction");
+//}
 else if ( is_menu_set('add_user_type') != ""){
     $currentPage = WPATH . "modules/add/add_user_type.php";
     set_title("Bookhive | Add User Type");
@@ -119,10 +134,10 @@ else if ( is_menu_set('update_county') != ""){
     $currentPage = WPATH . "modules/update/update_county.php";
     set_title("Bookhive | Update County");
 }
-else if ( is_menu_set('update_guest_user') != ""){
-    $currentPage = WPATH . "modules/update/update_guest_user.php";
-    set_title("Bookhive | Update Guest User");
-}
+//else if ( is_menu_set('update_guest_user') != ""){
+//    $currentPage = WPATH . "modules/update/update_guest_user.php";
+//    set_title("Bookhive | Update Guest User");
+//}
 else if ( is_menu_set('update_individual_user') != ""){
     $currentPage = WPATH . "modules/update/update_individual_user.php";
     set_title("Bookhive | Update Individual User");
@@ -204,10 +219,10 @@ else if ( is_menu_set('view_counties') != ""){
     $currentPage = WPATH . "modules/read/view_counties.php";
     set_title("Bookhive | Counties");
 }
-else if ( is_menu_set('view_guest_users') != ""){
-    $currentPage = WPATH . "modules/read/view_guest_users.php";
-    set_title("Bookhive | Guest Users");
-}
+//else if ( is_menu_set('view_guest_users') != ""){
+//    $currentPage = WPATH . "modules/read/view_guest_users.php";
+//    set_title("Bookhive | Guest Users");
+//}
 else if ( is_menu_set('view_individual_users') != ""){
     $currentPage = WPATH . "modules/read/view_individual_users.php";
     set_title("Bookhive | Individual Users");
@@ -231,6 +246,18 @@ else if ( is_menu_set('view_inbox_messages') != ""){
 else if ( is_menu_set('view_publishers') != ""){
     $currentPage = WPATH . "modules/read/view_publishers.php";
     set_title("Bookhive | Publishers");
+}
+else if ( is_menu_set('view_self_publishers') != ""){
+    $currentPage = WPATH . "modules/read/view_self_publishers.php";
+    set_title("Bookhive | Self Publishers");
+}
+else if ( is_menu_set('view_schools') != ""){
+    $currentPage = WPATH . "modules/read/view_schools.php";
+    set_title("Bookhive | Schools");
+}
+else if ( is_menu_set('view_corporates') != ""){
+    $currentPage = WPATH . "modules/read/view_corporates.php";
+    set_title("Bookhive | Corporates");
 }
 else if ( is_menu_set('view_roles') != ""){
     $currentPage = WPATH . "modules/read/view_roles.php";
@@ -268,6 +295,10 @@ else if ( is_menu_set('view_transaction_details') != ""){
     $currentPage = WPATH . "modules/read/view_transaction_details.php";
     set_title("Bookhive | Transaction Details");
 }
+else if ( is_menu_set('view_individual_transaction') != ""){
+    $currentPage = WPATH . "modules/read/view_transaction_details.php";
+    set_title("Bookhive | Transaction Details");
+}
 else if ( is_menu_set('view_user_types') != ""){
     $currentPage = WPATH . "modules/read/view_user_types.php";
     set_title("Bookhive | User Types");
@@ -297,10 +328,10 @@ else if ( is_menu_set('view_counties_individual') != ""){
     $currentPage = WPATH . "modules/read/view_counties_individual.php";
     set_title("Bookhive | County Details");
 }
-else if ( is_menu_set('view_guest_users_individual') != ""){
-    $currentPage = WPATH . "modules/read/view_guest_users_individual.php";
-    set_title("Bookhive | Guest User Details");
-}
+//else if ( is_menu_set('view_guest_users_individual') != ""){
+//    $currentPage = WPATH . "modules/read/view_guest_users_individual.php";
+//    set_title("Bookhive | Guest User Details");
+//}
 else if ( is_menu_set('view_individual_users_individual') != ""){
     $currentPage = WPATH . "modules/read/view_individual_users_individual.php";
     set_title("Bookhive | Individual User Details");
@@ -371,7 +402,7 @@ else if (!empty($_GET)) {
 }
 
 else{
-    $currentPage = WPATH . "modules/home.php";
+    $currentPage = WPATH . "modules/login.php";
     if ( App::isLoggedIn() ) {
 		set_title("Bookhive | Home");                
 	}        

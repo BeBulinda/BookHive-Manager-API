@@ -1,8 +1,5 @@
-
 <?php
-//if (!App::isLoggedIn()) {
-//    App::redirectTo("?");
-//}
+if (!App::isLoggedIn()) App::redirectTo("?");
 require_once WPATH . "modules/classes/Books.php";
 require_once WPATH . "modules/classes/Users.php";
 require_once WPATH . "modules/classes/System_Administration.php";
@@ -20,9 +17,10 @@ if (!empty($_POST)) {
     $_SESSION['filename'] = $cover_photo;
 
     $url = "http://localhost/bookhive_web/";
-//    $url = "http://live_url/bookhive_web/";
+//    $url = "http://test.bookhivekenya.com/";
 
     if ($_POST['book_level'] == 1) {
+//        $location = 'http://localhost/bookhive_web/modules/images/books/ecd/';
         $location = $url . 'modules/images/books/ecd/';
     } else if ($_POST['book_level'] == 2) {
         $location = $url . 'modules/images/books/primary/';
@@ -32,15 +30,30 @@ if (!empty($_POST)) {
         $location = $url . 'modules/images/books/adult/';
     }
 
-    if (move_uploaded_file($tmp_name, $location . $cover_photo)) {
-        $success = $books->execute();
-        if (is_bool($success) && $success == true) {
-            $_SESSION['add_success'] = true;
-        }
-        App::redirectTo("?view_books");
-    } else {
+    $request = $books->uploadBookPhoto($tmp_name, $location . $cover_photo);
+    argDump($request);
+    argDump($request);
+    argDump($request);
+    exit();
+
+    if ($request['status'] == 200) {
+    $success = $books->execute();
+    if (is_bool($success) && $success == true) {
+        $_SESSION['add_success'] = true;
+    }
+    App::redirectTo("?view_books");
+    } else if ($request['status'] == 500) {
         $_SESSION['create_error'] = "Error uploading photo. Kindly add the book again.";
     }
+//    if (move_uploaded_file($tmp_name, $location . $cover_photo)) {
+//        $success = $books->execute();
+//        if (is_bool($success) && $success == true) {
+//            $_SESSION['add_success'] = true;
+//        }
+//        App::redirectTo("?view_books");
+//    } else {
+//        $_SESSION['create_error'] = "Error uploading photo. Kindly add the book again.";
+//    }
 }
 ?>
 
@@ -66,7 +79,7 @@ if (!empty($_POST)) {
                     <div class="widget-content nopadding">
                         <form class="form-horizontal" method="post" name="basic_validate" id="basic_validate" novalidate="novalidate" enctype="multipart/form-data">
                             <input type="hidden" name="action" value="add_book"/>
-                            <input type="hidden" name="createdby" value="<?php echo 01; //  echo $_SESSION['userid'];         ?>"/>
+                            <input type="hidden" name="createdby" value="<?php echo 01; //  echo $_SESSION['userid'];             ?>"/>
 
                             <div class="control-group">
                                 <label class="control-label">Title</label>
@@ -99,7 +112,7 @@ if (!empty($_POST)) {
 
                             --------------To implement show-hide for this------------------------------
 
-                            <?php // if ($publisher_type == "company") { ?>
+                            <?php // if ($publisher_type == "company") {  ?>
                             <div class="control-group">
                                 <label class="control-label">Publisher</label>
                                 <div class="controls">
@@ -108,7 +121,7 @@ if (!empty($_POST)) {
                                     </select>
                                 </div>
                             </div>
-                            <?php // } else if ($publisher_type == "company") { ?>
+                            <?php // } else if ($publisher_type == "company") {  ?>
                             <div class="control-group">
                                 <label class="control-label">Publisher</label>
                                 <div class="controls">
@@ -117,7 +130,7 @@ if (!empty($_POST)) {
                                     </select>
                                 </div>
                             </div>
-                            <?php // } ?>
+                            <?php // }  ?>
 
                             ---------------------------------------------------------------------------
 
@@ -152,7 +165,7 @@ if (!empty($_POST)) {
 
                             --------------To implement show-hide for this------------------------------
 
-                            <?php // if (book_level == "primary") { ?>
+                            <?php // if (book_level == "primary") {  ?>
                             <div class="control-group">
                                 <label class="control-label">Class</label>
                                 <div class="controls">
@@ -171,7 +184,7 @@ if (!empty($_POST)) {
                                     </select>
                                 </div>
                             </div>
-                            <?php // } else if (book_level == "secondary") { ?>
+                            <?php // } else if (book_level == "secondary") {  ?>
                             <div class="control-group">
                                 <label class="control-label">Class</label>
                                 <div class="controls">
@@ -186,7 +199,7 @@ if (!empty($_POST)) {
                                     </select>
                                 </div>
                             </div>
-                            <?php // } ?>
+                            <?php // }  ?>
 
                             ---------------------------------------------------------------------------
 

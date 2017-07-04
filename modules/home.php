@@ -1,9 +1,14 @@
 
-<!--main-container-part-->
+<?php
+if (!App::isLoggedIn()) App::redirectTo("?"); 
+require_once WPATH . "modules/classes/Users.php";
+$users = new Users();
+?>
+
 <div id="content">
     <!--breadcrumbs-->
     <div id="content-header">
-        <div id="breadcrumb"> <a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a></div>
+        <div id="breadcrumb"> <a href="?home" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a></div>
     </div>
     <!--End-breadcrumbs-->
 
@@ -35,5 +40,3 @@
     <!--End-Chart-box--> 
     <hr/>
 </div>
-
-<!--end-main-container-part-->
