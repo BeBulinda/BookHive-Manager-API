@@ -1,7 +1,5 @@
 <?php
-//if (!App::isLoggedIn()) {
-//    App::redirectTo("?");
-//}
+if (!App::isLoggedIn()) App::redirectTo("?");
 require_once WPATH . "modules/classes/Users.php";
 $users = new Users();
 if (!empty($_POST)) {
@@ -12,9 +10,13 @@ if (!empty($_POST)) {
     $extension = substr($logo_name, strpos($logo_name, '.') + 1);
     $logo = strtoupper($filename . '.' . $extension);
     $_SESSION['filename'] = $logo;
-    $location = 'modules/images/logos/publishers/';
+    
+    $url = "http://localhost/bookhive_web/";
+//    $url = "http://live_url/bookhive_web/";    
+    
+    $location = $url.'modules/images/logos/publishers/';
 
-    if (move_uploaded_file($tmp_name, $location . $logo)) {
+//    if (move_uploaded_file($tmp_name, $location . $logo)) {
         $_SESSION['publisher_company_name'] = $_POST['company_name'];
         $_SESSION['publisher_description'] = $_POST['description'];
 //        $_SESSION['publisher_logo'] = $_POST['logo'];
@@ -22,9 +24,9 @@ if (!empty($_POST)) {
         if (isset($_SESSION['publisher_company_name'])) {
             App::redirectTo("?add_contact&ref_type=" . $_SESSION['user_type']);
         }
-    } else {
-        $_SESSION['create_error'] = "Error uploading photo. Kindly add the book again.";
-    }
+//    } else {
+//        $_SESSION['create_error'] = "Error uploading photo. Kindly add the book again.";
+//    }
 }
 ?>
 

@@ -76,7 +76,27 @@ class Transactions extends Database {
             $_SESSION['yes_records'] = true;
             $values2 = array();
             foreach ($info as $data) {
-                $values = array("id" => $data['id'], "transaction_type" => $data['transaction_type'], "amount" => $data['amount'], "transactedby" => $data['transactedby'], "payment_option" => $data['payment_option'], "createdat" => $data['createdat'], "authorizedat" => $data['authorizedat'], "authorizedby" => $data['authorizedby'], "status" => $data['status']);
+                $values = array("id" => $data['id'], "transaction_type" => $data['transaction_type'], "amount" => $data['amount'], "buyer_type" => $data['buyer_type'], "buyer_id" => $data['buyer_id'], "payment_option" => $data['payment_option'], "createdat" => $data['createdat'], "authorizedat" => $data['authorizedat'], "authorizedby" => $data['authorizedby'], "status" => $data['status']);
+                array_push($values2, $values);
+            }
+            return json_encode($values2);
+        }
+    }
+
+    public function getTransactionDetails($transaction_id) {
+        $sql = "SELECT * FROM transaction_details WHERE transaction_id=:transaction_id ORDER BY id ASC";
+        $stmt = $this->prepareQuery($sql);
+        $stmt->bindValue("transaction_id", $transaction_id);
+        $stmt->execute();
+        $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (count($info) == 0) {
+            $_SESSION['no_records'] = true;
+        } else {
+            $_SESSION['yes_records'] = true;
+            $values2 = array();
+            foreach ($info as $data) {
+                $values = array("id" => $data['id'], "transaction_id" => $data['transaction_id'], "book_id" => $data['book_id'], "quantity" => $data['quantity'], "unit_price" => $data['unit_price'], "book_version" => $data['book_version'], "publisher_type" => $data['publisher_type'], "publisher" => $data['publisher'], "expireat" => $data['expireat']);
                 array_push($values2, $values);
             }
             return json_encode($values2);

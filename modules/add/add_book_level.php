@@ -1,7 +1,5 @@
 <?php
-//if (!App::isLoggedIn()) {
-//    App::redirectTo("?");
-//}
+if (!App::isLoggedIn()) App::redirectTo("?");
 require_once WPATH . "modules/classes/System_Administration.php";
 $system_administration = new System_Administration();
 if (!empty($_POST)) {

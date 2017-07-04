@@ -2,58 +2,36 @@
 if (!App::isLoggedIn()) App::redirectTo("?");
 require_once WPATH . "modules/classes/Users.php";
 $users = new Users();
-$ref_type = $_GET['ref_type'];  //If Publisher, Book seller etc
-
 if (!empty($_POST)) {
-    $_SESSION['createdby'] = $_POST['createdby'];
-    $_SESSION['admin_firstname'] = $_POST['firstname'];
-    $_SESSION['admin_lastname'] = $_POST['lastname'];
-    $_SESSION['admin_idnumber'] = $_POST['idnumber'];
-    $_SESSION['admin_phone_number'] = $_POST['phone_number'];
-    $_SESSION['admin_email'] = $_POST['email'];    
-    
-    if ($ref_type == "PUBLISHER") {
-        $success = $users->execute();
-        if (is_bool($success) && $success == true) {
-            $_SESSION['add_success'] = true;
-        }
-        App::redirectTo("?view_publishers");
-    } else if ($ref_type == "BOOK SELLER") {
-        $success = $users->execute();
-        if (is_bool($success) && $success == true) {
-            $_SESSION['add_success'] = true;
-        }
-        App::redirectTo("?view_book_sellers");
+    $success = $users->execute();
+    if (is_bool($success) && $success == true) {
+        $_SESSION['add_success'] = true;
     }
+    App::redirectTo("?view_self_publishers");
 }
 ?>
 
 <div id="content">
     <div id="content-header">
-        <div id="breadcrumb"> <a href="?home" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="?view_system_administrators">System Administrators</a> <a href="?add_system_administrator" class="current">Add System Administrator</a> </div>
-        <h1>Add System Administrator</h1>
+        <div id="breadcrumb"> <a href="?home" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="?view_self_publishers">Publishers</a> <a href="?add_self_publisher" class="current">Add Self Publisher</a> </div>
+        <h1>Add Self Publisher</h1>
     </div>
     <div class="container-fluid"><hr>
         <div class="row-fluid">
             <div class="span12">
                 <div class="widget-box">          
                     <div class="widget-content nopadding">
-                        <form class="form-horizontal" method="post" name="basic_validate" id="basic_validate" novalidate="novalidate">             
-                            <input type="hidden" name="createdby" value="<?php echo 01; //  echo $_SESSION['userid'];        ?>"/>
-                            <?php if ($ref_type == "PUBLISHER") { ?>
-                                <input type="hidden" name="action" value="add_publisher"/>
-                            <?php } else if ($ref_type == "BOOK SELLER") { ?>
-                                <input type="hidden" name="action" value="add_book_seller"/>
-                            <?php } ?>
-
+                        <form class="form-horizontal" method="post" name="basic_validate" id="basic_validate" novalidate="novalidate">
+                            <input type="hidden" name="action" value="add_self_publisher"/>
+                            <input type="hidden" name="createdby" value="<?php echo 01; //  echo $_SESSION['userid'];     ?>"/>
                             <div class="control-group">
-                                <label class="control-label">First Name</label>
+                                <label class="control-label">Firstname</label>
                                 <div class="controls">
                                     <input type="text" name="firstname" id="firstname">
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label">Last Name</label>
+                                <label class="control-label">Lastname</label>
                                 <div class="controls">
                                     <input type="text" name="lastname" id="lastname">
                                 </div>
@@ -65,15 +43,30 @@ if (!empty($_POST)) {
                                 </div>
                             </div>
                             <div class="control-group">
+                                <label class="control-label">Gender</label>
+                                <div class="controls">
+                                    <select name="gender">
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="control-group">
                                 <label class="control-label">Phone Number</label>
                                 <div class="controls">
                                     <input type="text" name="phone_number" id="phone_number">
                                 </div>
                             </div>
                             <div class="control-group">
-                                <label class="control-label">Email</label>
+                                <label class="control-label">Email Address</label>
                                 <div class="controls">
                                     <input type="text" name="email" id="email">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label">Description</label>
+                                <div class="controls">
+                                    <textarea class="span11" name="description" id="description"></textarea>
                                 </div>
                             </div>
                             <div class="form-actions">

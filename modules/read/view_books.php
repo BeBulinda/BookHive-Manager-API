@@ -1,7 +1,5 @@
 <?php
-//if (!App::isLoggedIn()) {
-//    App::redirectTo("?");
-//}
+if (!App::isLoggedIn()) App::redirectTo("?");
 require_once WPATH . "modules/classes/Books.php";
 require_once WPATH . "modules/classes/Users.php";
 require_once WPATH . "modules/classes/System_Administration.php";
@@ -73,15 +71,23 @@ unset($_SESSION['book']);
                                             } else if ($value2['status'] == 1010) {
                                                 $status = "APPROVAL REJECTED";
                                             }
+
+                                            if ($value2['publisher_type'] == "COMPANY") {
+                                                $publisher_details = $users->fetchPublisherDetails($value2['publisher']);
+                                                $publisher_name = $publisher_details['company_name'];
+                                            } else if ($value2['publisher_type'] == "SELF") {
+                                                $publisher_details = $users->fetchSelfPublisherDetails($value2['publisher']);
+                                                $publisher_name = $publisher_details['firstname'] . " " . $publisher_details['lastname'];
+                                            }
+
                                             
-                                            $publisher_details = $users->fetchPublisherDetails($value2['publisher']);
 //                                            $book_type_details = $system_administration->fetchBookTypeDetails($value2['type_id']);
                                             $book_level_details = $system_administration->fetchBookLevelDetails($value2['level_id']);
-                                            
+
                                             echo "<tr>";
                                             echo "<td> <a href='?individual_book&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
                                             echo "<td>" . $value2['title'] . "</td>";
-                                            echo "<td>" . $publisher_details['company_name'] . "</td>";
+                                            echo "<td>" . $publisher_name . "</td>";
 //                                            echo "<td>" . $book_type_details['name'] . "</td>";
                                             echo "<td>" . $value2['author'] . "</td>";
                                             echo "<td>" . $value2['isbn_number'] . "</td>";

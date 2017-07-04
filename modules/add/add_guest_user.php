@@ -1,7 +1,5 @@
 <?php
-//if (!App::isLoggedIn()) {
-//    App::redirectTo("?");
-//}
+if (!App::isLoggedIn()) App::redirectTo("?");
 require_once WPATH . "modules/classes/Users.php";
 $users = new Users();
 if (!empty($_POST)) {
@@ -47,8 +45,8 @@ if (!empty($_POST)) {
                                 <label class="control-label">Gender</label>
                                 <div class="controls">
                                     <select name="gender" id="gender">
-                                        <option>Male</option>
-                                        <option>Female</option>
+                                        <option value="male">Male</option>
+                                        <option value="female">Female</option>
                                     </select>
                                 </div>
                             </div>

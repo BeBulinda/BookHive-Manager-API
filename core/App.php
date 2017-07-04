@@ -28,7 +28,7 @@ class App {
 	 * A function for checking if someone has logged into the system
 	 */
 	public static function isLoggedIn() {
-		return isset($_SESSION['username']);
+		return isset($_SESSION['userid']);
 	}
 
 

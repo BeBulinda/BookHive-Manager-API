@@ -1,7 +1,5 @@
 <?php
-//if (!App::isLoggedIn()) {
-//    App::redirectTo("?");
-//}
+if (!App::isLoggedIn()) App::redirectTo("?");
 require_once WPATH . "modules/classes/Users.php";
 $users = new Users();
 if (!empty($_POST)) {

@@ -1,7 +1,5 @@
 <?php
-//if (!App::isLoggedIn()) {
-//    App::redirectTo("?");
-//}
+if (!App::isLoggedIn()) App::redirectTo("?");
 require_once WPATH . "modules/classes/Users.php";
 require_once WPATH . "modules/classes/System_Administration.php";
 $users = new Users();
@@ -137,7 +135,7 @@ if (!empty($_POST)) {
                             <div class="control-group">
                                 <label class="control-label">County</label>
                                 <div class="controls">
-                                    <select name="county" id="gender">
+                                    <select name="county">
                                         <?php echo $system_administration->getCounties(); ?>
                                     </select>
                                 </div>
@@ -145,7 +143,7 @@ if (!empty($_POST)) {
                             <div class="control-group">
                                 <label class="control-label">Sub-County</label>
                                 <div class="controls">
-                                    <select name="sub_county" id="gender">
+                                    <select name="sub_county">
                                         <?php echo $system_administration->getSubCounties(); ?>
                                     </select>
                                 </div>
@@ -153,7 +151,7 @@ if (!empty($_POST)) {
                             <div class="control-group">
                                 <label class="control-label">Location</label>
                                 <div class="controls">
-                                    <select name="location" id="gender">
+                                    <select name="location">
                                         <?php echo $system_administration->getLocations(); ?>
                                     </select>
                                 </div>
