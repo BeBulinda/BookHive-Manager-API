@@ -103,7 +103,7 @@ $results = $db_handle->runQuery($query);
         ?>
 
         <!-- Basic scripts -->  
-<!--        <script src="web/js/excanvas.min.js"></script> 
+        <script src="web/js/excanvas.min.js"></script> 
         <script src="web/js/jquery.min.js"></script> 
         <script src="web/js/jquery.ui.custom.js"></script> 
         <script src="web/js/bootstrap.min.js"></script> 
@@ -123,7 +123,7 @@ $results = $db_handle->runQuery($query);
         <script src="web/js/select2.min.js"></script> 
         <script src="web/js/matrix.popover.js"></script> 
         <script src="web/js/jquery.dataTables.min.js"></script> 
-        <script src="web/js/matrix.tables.js"></script>-->
+        <script src="web/js/matrix.tables.js"></script>
 
         <script type="text/javascript">
             // This function is called from the pop-up menus to transfer to

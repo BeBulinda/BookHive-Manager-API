@@ -31,21 +31,18 @@ if (!empty($_POST)) {
         $location = $url . 'modules/images/books/adult/';
     }
 
-    $request = $books->uploadBookPhoto($tmp_name, $location . $cover_photo);
-    argDump($request);
-    argDump($request);
-    argDump($request);
-    exit();
 
-    if ($request['status'] == 200) {
+    $request = $books->uploadBookPhoto($tmp_name, $location . $cover_photo);
+
+//    if ($request['status'] == 200) {
         $success = $books->execute();
         if (is_bool($success) && $success == true) {
             $_SESSION['add_success'] = true;
         }
         App::redirectTo("?view_books");
-    } else if ($request['status'] == 500) {
-        $_SESSION['create_error'] = "Error uploading photo. Kindly add the book again.";
-    }
+//    } else if ($request['status'] == 500) {
+//        $_SESSION['create_error'] = "Error uploading photo. Kindly add the book again.";
+//    }
 //    if (move_uploaded_file($tmp_name, $location . $cover_photo)) {
 //        $success = $books->execute();
 //        if (is_bool($success) && $success == true) {
@@ -80,7 +77,7 @@ if (!empty($_POST)) {
                     <div class="widget-content nopadding">
                         <form class="form-horizontal" method="post" name="basic_validate" id="basic_validate" novalidate="novalidate" enctype="multipart/form-data">
                             <input type="hidden" name="action" value="add_book"/>
-                            <input type="hidden" name="createdby" value="<?php echo 01; //  echo $_SESSION['userid'];               ?>"/>
+                            <input type="hidden" name="createdby" value="<?php echo 01; //  echo $_SESSION['userid'];                 ?>"/>
 
                             <div class="control-group">
                                 <label class="control-label">Title</label>

@@ -47,23 +47,6 @@ class Books extends Database {
 
     public function uploadBookPhoto($tmp_name, $location) {
 
-        $url = 'http://localhost/bookhive_web/?admin_requests&';
-//        $url = 'http://test.bookhive/?admin_requests&';
-        $header = array('Content-Type: multipart/form-data');
-
-
-        $ch = curl_init($url);  // Create a cURL handle
-        $cfile = new CURLFile('cats.jpg', 'image/jpeg', 'test_name');  // Create a CURLFile object
-// Assign POST data
-        $data = array('test_file' => $cfile);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-
-
-// Execute the handle
-        curl_exec($ch);
-
-
         $data['request_type'] = "upload_book_photo";
         $data['fields'] = array('file' => '@' . $tmp_name[0]);
 //        $data['tmp_name'] = $tmp_name;
