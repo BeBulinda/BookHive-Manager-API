@@ -1,5 +1,6 @@
 <?php
-if (!App::isLoggedIn()) App::redirectTo("?");
+if (!App::isLoggedIn())
+    App::redirectTo("?");
 require_once WPATH . "modules/classes/Users.php";
 require_once WPATH . "modules/classes/System_Administration.php";
 $users = new Users();
@@ -57,7 +58,7 @@ if (!empty($_POST)) {
                 <div class="widget-box">          
                     <div class="widget-content nopadding">
                         <form class="form-horizontal" method="post" name="basic_validate" id="basic_validate" novalidate="novalidate">
-                            <input type="hidden" name="createdby" value="<?php echo 01; //  echo $_SESSION['userid'];           ?>"/>
+                            <input type="hidden" name="createdby" value="<?php echo 01; //  echo $_SESSION['userid'];            ?>"/>
                             <?php if ($ref_type == "GUEST USER") { ?>
                                 <input type="hidden" name="action" value="add_guest_user"/>
                             <?php } else if ($ref_type == "INDIVIDUAL USER") { ?>
@@ -135,24 +136,33 @@ if (!empty($_POST)) {
                             <div class="control-group">
                                 <label class="control-label">County</label>
                                 <div class="controls">
-                                    <select name="county">
-                                        <?php echo $system_administration->getCounties(); ?>
+                                    <select class="county" id="country-list" name="county" class="demoInputBox" onChange="getState(this.value);">
+                                        <?php // echo $system_administration->getCounties();  ?>
+                                        <option value="">Select County</option>
+                                        <?php
+                                        foreach ($results as $county) {
+                                            ?>
+                                            <option value="<?php echo $county["id"]; ?>"><?php echo $county["name"]; ?></option>
+                                            <?php
+                                        }
+                                        ?>
                                     </select>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label">Sub-County</label>
                                 <div class="controls">
-                                    <select name="sub_county">
-                                        <?php echo $system_administration->getSubCounties(); ?>
+                                    <select name="sub_county" id="county-list" class="demoInputBox" onChange="getLocation(this.value);">
+                                        <?php //echo $system_administration->getSubCounties(); ?>
+                                        <option value="">Select Sub-County</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label">Location</label>
                                 <div class="controls">
-                                    <select name="location">
-                                        <?php echo $system_administration->getLocations(); ?>
+                                    <select name="location"id="location-list" class="demoInputBox">
+                                        <?php //echo $system_administration->getLocations(); ?>
                                     </select>
                                 </div>
                             </div>

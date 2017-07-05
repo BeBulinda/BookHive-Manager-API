@@ -606,18 +606,19 @@ class System_Administration extends Database {
     }
 
     public function getSubCounties() {
-        $sql = "SELECT id, name, county_id status FROM sub_counties WHERE status=1021 "
+        $sql = "SELECT id, name, county_id, status FROM sub_counties WHERE status=1021 "
                 . " ORDER BY county_id ASC";
         $stmt = $this->prepareQuery($sql);
         $stmt->execute();
         $currentGroup = null;
         $html = "";
+        $variable = "counties ";
         while ($row = $stmt->fetch()) {
             if (is_null($currentGroup)) {
                 $currentGroup = $row['name'];
-                $html .= "<option value=\"{$row['id']}\" selected>{$row['name']}</option>";
+                $html .= "<option class=\"{$row['county_id']}.$variable\" value=\"{$row['id']}\" selected>{$row['name']}</option>";
             } else {
-                $html .= "<option value=\"{$row['id']}\">{$row['name']}</option>";
+                $html .= "<option class=\"{$row['county_id']}.$variable\" value=\"{$row['id']}\">{$row['name']}</option>";
             }
         }
         if ($html == "")

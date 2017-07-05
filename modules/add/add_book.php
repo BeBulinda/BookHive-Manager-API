@@ -1,5 +1,6 @@
 <?php
-if (!App::isLoggedIn()) App::redirectTo("?");
+if (!App::isLoggedIn())
+    App::redirectTo("?");
 require_once WPATH . "modules/classes/Books.php";
 require_once WPATH . "modules/classes/Users.php";
 require_once WPATH . "modules/classes/System_Administration.php";
@@ -37,11 +38,11 @@ if (!empty($_POST)) {
     exit();
 
     if ($request['status'] == 200) {
-    $success = $books->execute();
-    if (is_bool($success) && $success == true) {
-        $_SESSION['add_success'] = true;
-    }
-    App::redirectTo("?view_books");
+        $success = $books->execute();
+        if (is_bool($success) && $success == true) {
+            $_SESSION['add_success'] = true;
+        }
+        App::redirectTo("?view_books");
     } else if ($request['status'] == 500) {
         $_SESSION['create_error'] = "Error uploading photo. Kindly add the book again.";
     }
@@ -79,7 +80,7 @@ if (!empty($_POST)) {
                     <div class="widget-content nopadding">
                         <form class="form-horizontal" method="post" name="basic_validate" id="basic_validate" novalidate="novalidate" enctype="multipart/form-data">
                             <input type="hidden" name="action" value="add_book"/>
-                            <input type="hidden" name="createdby" value="<?php echo 01; //  echo $_SESSION['userid'];             ?>"/>
+                            <input type="hidden" name="createdby" value="<?php echo 01; //  echo $_SESSION['userid'];               ?>"/>
 
                             <div class="control-group">
                                 <label class="control-label">Title</label>
@@ -102,18 +103,16 @@ if (!empty($_POST)) {
                             <div class="control-group">
                                 <label class="control-label">Publisher Type</label>
                                 <div class="controls">
-                                    <select name="publisher_type">
-                                        <option value="none">Select publisher type</option>
+                                    <select class="publish" name="publisher_type">
+                                        <option>Select publisher type</option>
                                         <option value="company">Company/Business</option>
                                         <option value="self">Self Publisher</option>
                                     </select>
                                 </div>
                             </div>
 
-                            --------------To implement show-hide for this------------------------------
-
-                            <?php // if ($publisher_type == "company") {  ?>
-                            <div class="control-group">
+                            <?php // if ($publisher_type == "company") {   ?>
+                            <div class="control-group company publisher">
                                 <label class="control-label">Publisher</label>
                                 <div class="controls">
                                     <select name="publisher" id="publisher">
@@ -121,18 +120,16 @@ if (!empty($_POST)) {
                                     </select>
                                 </div>
                             </div>
-                            <?php // } else if ($publisher_type == "company") {  ?>
-                            <div class="control-group">
-                                <label class="control-label">Publisher</label>
+                            <?php // } else if ($publisher_type == "company") {   ?>
+                            <div class="control-group self publisher">
+                                <label class="control-label">Self Publisher</label>
                                 <div class="controls">
                                     <select name="self_publisher">
                                         <?php echo $users->getSelfPublishers(); ?>
                                     </select>
                                 </div>
                             </div>
-                            <?php // }  ?>
-
-                            ---------------------------------------------------------------------------
+                            <?php // }   ?>
 
                             <div class="control-group">
                                 <label class="control-label">Year of Publication</label>
@@ -157,16 +154,15 @@ if (!empty($_POST)) {
                             <div class="control-group">
                                 <label class="control-label">Book Level</label>
                                 <div class="controls">
-                                    <select name="book_level" id="book_level">
+                                    <select class="level" name="book_level" id="book_level">
                                         <?php echo $system_administration->getBookLevels(); ?>
                                     </select>
                                 </div>
                             </div>
 
-                            --------------To implement show-hide for this------------------------------
 
-                            <?php // if (book_level == "primary") {  ?>
-                            <div class="control-group">
+                            <?php // if (book_level == "primary") {   ?>
+                            <div class="control-group 2 levels">
                                 <label class="control-label">Class</label>
                                 <div class="controls">
                                     <select name="primary_class">
@@ -184,9 +180,9 @@ if (!empty($_POST)) {
                                     </select>
                                 </div>
                             </div>
-                            <?php // } else if (book_level == "secondary") {  ?>
-                            <div class="control-group">
-                                <label class="control-label">Class</label>
+                            <?php // } else if (book_level == "secondary") {   ?>
+                            <div class="control-group 3 levels">
+                                <label class="control-label">Form</label>
                                 <div class="controls">
                                     <select name="secondary_class">
                                         <option value="none">Select Class</option>
@@ -199,9 +195,7 @@ if (!empty($_POST)) {
                                     </select>
                                 </div>
                             </div>
-                            <?php // }  ?>
-
-                            ---------------------------------------------------------------------------
+                            <?php // }   ?>
 
                             <div class="control-group">
                                 <label class="control-label">Print Type</label>
