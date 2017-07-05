@@ -31,19 +31,28 @@ if (!empty($_POST)) {
                                     <input type="text" name="name" id="name">
                                 </div>
                             </div>
-                            <div class="control-group">
+                           <div class="control-group">
                                 <label class="control-label">County</label>
                                 <div class="controls">
-                                    <select name="county_id" id="county_id">
-                                        <?php echo $system_administration->getCounties(); ?>
+                                    <select class="county" id="country-list" name="county" class="demoInputBox" onChange="getState(this.value);">
+                                        <?php // echo $system_administration->getCounties();  ?>
+                                        <option value="">Select County</option>
+                                        <?php
+                                        foreach ($results as $county) {
+                                            ?>
+                                            <option value="<?php echo $county["id"]; ?>"><?php echo $county["name"]; ?></option>
+                                            <?php
+                                        }
+                                        ?>
                                     </select>
                                 </div>
                             </div>
                             <div class="control-group">
                                 <label class="control-label">Sub-County</label>
                                 <div class="controls">
-                                    <select name="sub_county_id" id="sub_county_id">
-                                        <?php echo $system_administration->getSubCounties(); ?>
+                                    <select name="sub_county" id="county-list" class="demoInputBox" onChange="getLocation(this.value);">
+                                        <?php //echo $system_administration->getSubCounties(); ?>
+                                        <option value="">Select Sub-County</option>
                                     </select>
                                 </div>
                             </div>

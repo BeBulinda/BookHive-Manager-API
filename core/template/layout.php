@@ -3,6 +3,12 @@
 header('Content-Type: text/html; charset=UTF-8');
 date_default_timezone_set("Africa/Nairobi");
 ?>
+<?php
+require_once("dbcontroller.php");
+$db_handle = new DBController();
+$query = "SELECT * FROM counties";
+$results = $db_handle->runQuery($query);
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -18,7 +24,35 @@ date_default_timezone_set("Africa/Nairobi");
         <link href="web/web/font-awesome/css/font-awesome.css" rel="stylesheet" />
         <link rel="stylesheet" href="css/jquery.gritter.css" />
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>
-
+        <!--Show Hide fields-->
+        <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+        <script src="web/js/filters.js"></script>
+        <!--Show Hide fields END-->
+        <!--Listing FILTER-->
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
+        <script>
+            function getState(val) {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8081/bookhive_v1.0_api/core/template/get_state.php",
+                    data: 'county_id=' + val,
+                    success: function (data) {
+                        $("#county-list").html(data);
+                    }
+                });
+            }
+            function getLocation(val) {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8081/bookhive_v1.0_api/core/template/get_location.php",
+                    data: 'location_id=' + val,
+                    success: function (data) {
+                        $("#location-list").html(data);
+                    }
+                });
+            }
+        </script>
+        <!--Listing FILTER END-->
         <?php
         /*         * *
          * This section specifies the page header
@@ -69,7 +103,7 @@ date_default_timezone_set("Africa/Nairobi");
         ?>
 
         <!-- Basic scripts -->  
-        <script src="web/js/excanvas.min.js"></script> 
+<!--        <script src="web/js/excanvas.min.js"></script> 
         <script src="web/js/jquery.min.js"></script> 
         <script src="web/js/jquery.ui.custom.js"></script> 
         <script src="web/js/bootstrap.min.js"></script> 
@@ -89,7 +123,7 @@ date_default_timezone_set("Africa/Nairobi");
         <script src="web/js/select2.min.js"></script> 
         <script src="web/js/matrix.popover.js"></script> 
         <script src="web/js/jquery.dataTables.min.js"></script> 
-        <script src="web/js/matrix.tables.js"></script>
+        <script src="web/js/matrix.tables.js"></script>-->
 
         <script type="text/javascript">
             // This function is called from the pop-up menus to transfer to
@@ -116,6 +150,9 @@ date_default_timezone_set("Africa/Nairobi");
             }
         </script>
         <!-- End of basic scripts -->
+
+
+
         <?php
         /*         * *
          * Specify the scripts that are to be added.
@@ -136,9 +173,9 @@ date_default_timezone_set("Africa/Nairobi");
         ?>
         <?php if (!App::isLoggedIn()) { ?>
             <script>
-            jQuery(document).ready(function () {
-                App.initLogin();
-            });
+                jQuery(document).ready(function () {
+                    App.initLogin();
+                });
             </script>
         <?php } else { ?>
             <script>
