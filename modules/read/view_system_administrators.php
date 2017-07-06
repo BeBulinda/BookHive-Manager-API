@@ -69,7 +69,7 @@ unset($_SESSION['system_administrator']);
                                             echo "<tr>";
                                             echo "<td> <a href='?individual_system_administrator&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
                                             echo "<td>" . $value2['firstname'] . " " . $value2['lastname'] . "</td>";
-                                            echo "<td>" . $value2['level'] . "</td>";
+                                            echo "<td>" . $value2['reference_type'] . "</td>";
                                             echo "<td>" . $value2['phone_number'] . "</td>";
                                             echo "<td>" . $value2['email'] . "</td>";
                                             echo "<td>" . $status . "</td>";

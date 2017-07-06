@@ -76,8 +76,8 @@ unset($_SESSION['staff']);
                                             }
                                             echo "<tr>";
                                             echo "<td> <a href='?individual_staff&code=" . $value2['id'] . "'>" . $value2['firstname'] . " " . $value2['lastname'] . "</td>";
-                                            echo "<td>" . $value2['level_type'] . "</td>";
-                                            echo "<td>" . $value2['level_ref_id'] . "</td>";
+                                            echo "<td>" . $value2['reference_type'] . "</td>";
+                                            echo "<td>" . $value2['reference_id'] . "</td>";
                                             echo "<td>" . $value2['createdat'] . "</td>";
                                             echo "<td>" . $status . "</td>";
                                             echo "</tr>";

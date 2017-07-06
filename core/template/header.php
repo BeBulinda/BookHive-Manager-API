@@ -8,7 +8,7 @@ if ($_SESSION['logged_in_user_type_details']['name'] == "STAFF") {
         $user = $_SESSION['institution_details']['company_name'] . " " . $_SESSION['logged_in_user_type_details']['name'];
     } else if (isset($_SESSION['book_seller_staff']) && $_SESSION['publisher_staff'] == true) {
         $user = "BOOK SELLER " . $_SESSION['logged_in_user_type_details']['name'];
-    } else if (isset($_SESSION['bookhive_staff']) && $_SESSION['publisher_staff'] == true) {
+    } else if (isset($_SESSION['bookhive_staff']) && $_SESSION['bookhive_staff'] == true) {
         $user = "BOOKHIVE " . $_SESSION['logged_in_user_type_details']['name'];
     }
 } else {

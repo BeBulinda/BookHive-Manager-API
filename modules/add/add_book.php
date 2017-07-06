@@ -85,18 +85,22 @@ if (!empty($_POST)) {
                                     <input type="text" name="title" id="title">
                                 </div>
                             </div>
+                            <?php if ($_SESSION['logged_in_user_type_details']['name'] <> "SELF PUBLISHER") { ?>
                             <div class="control-group">
                                 <label class="control-label">Author</label>
                                 <div class="controls">
                                     <input type="text" name="author" id="author">
                                 </div>
                             </div>
+                            <?php } ?>
                             <div class="control-group">
                                 <label class="control-label">Description</label>
                                 <div class="controls">
                                     <textarea class="span11" name="description" id="description"></textarea>
                                 </div>
                             </div>
+                            
+                            <?php if ($_SESSION['logged_in_user_type_details']['name'] == "BOOKHIVE") { ?>
                             <div class="control-group">
                                 <label class="control-label">Publisher Type</label>
                                 <div class="controls">
@@ -107,8 +111,7 @@ if (!empty($_POST)) {
                                     </select>
                                 </div>
                             </div>
-
-                            <?php // if ($publisher_type == "company") {   ?>
+                            <!--  if ($publisher_type == "company")-->
                             <div class="control-group company publisher">
                                 <label class="control-label">Publisher</label>
                                 <div class="controls">
@@ -117,7 +120,7 @@ if (!empty($_POST)) {
                                     </select>
                                 </div>
                             </div>
-                            <?php // } else if ($publisher_type == "company") {   ?>
+                            <!--  if ($publisher_type == "self")-->
                             <div class="control-group self publisher">
                                 <label class="control-label">Self Publisher</label>
                                 <div class="controls">
@@ -125,8 +128,8 @@ if (!empty($_POST)) {
                                         <?php echo $users->getSelfPublishers(); ?>
                                     </select>
                                 </div>
-                            </div>
-                            <?php // }   ?>
+                            </div>                            
+                            <?php } ?>
 
                             <div class="control-group">
                                 <label class="control-label">Year of Publication</label>
@@ -158,7 +161,7 @@ if (!empty($_POST)) {
                             </div>
 
 
-                            <?php // if (book_level == "primary") {   ?>
+                            <!--if (book_level == "primary")-->
                             <div class="control-group 2 levels">
                                 <label class="control-label">Class</label>
                                 <div class="controls">
@@ -177,7 +180,7 @@ if (!empty($_POST)) {
                                     </select>
                                 </div>
                             </div>
-                            <?php // } else if (book_level == "secondary") {   ?>
+                            <!--if (book_level == "secondary")-->
                             <div class="control-group 3 levels">
                                 <label class="control-label">Form</label>
                                 <div class="controls">
@@ -192,8 +195,6 @@ if (!empty($_POST)) {
                                     </select>
                                 </div>
                             </div>
-                            <?php // }   ?>
-
                             <div class="control-group">
                                 <label class="control-label">Print Type</label>
                                 <div class="controls">

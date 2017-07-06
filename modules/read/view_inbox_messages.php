@@ -1,5 +1,6 @@
 <?php
-if (!App::isLoggedIn()) App::redirectTo("?");
+if (!App::isLoggedIn())
+    App::redirectTo("?");
 require_once WPATH . "modules/classes/Transactions.php";
 $transactions = new Transactions();
 
@@ -18,7 +19,7 @@ unset($_SESSION['inbox_message']);
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
                         <h5>Inbox Messages</h5>
-                        <?php require_once('modules/menus/sub-sub-menu-buttons.php'); ?>
+<?php require_once('modules/menus/sub-sub-menu-buttons.php'); ?>
                     </div>
                     <div class="widget-content nopadding">
 
@@ -32,8 +33,9 @@ unset($_SESSION['inbox_message']);
                                     <th><h5>Message</h5></th>
                                     <th><h5>Created At</h5></th>
                                     <th><h5>Status</h5></th>
+                                    <th><h5>Action</h5></th>
                                 </tr>
-                                
+
                                 <?php
                                 if (!empty($_POST)) {
                                     $inbox_messages[] = $transactions->execute();
@@ -49,13 +51,14 @@ unset($_SESSION['inbox_message']);
                                     echo "<td> </td>";
                                     echo "<td> </td>";
                                     echo "<td> </td>";
+                                    echo "<td> </td>";
                                     echo "</tr>";
                                     unset($_SESSION['no_records']);
                                 } else if (isset($_SESSION['yes_records']) AND $_SESSION['yes_records'] == true) {
                                     foreach ($inbox_messages as $key => $value) {
                                         $inner_array[$key] = json_decode($value, true); // this will give key val pair array
                                         foreach ((array) $inner_array[$key] as $key2 => $value2) {
-                                                if ($value2['status'] == 1000) {
+                                            if ($value2['status'] == 1000) {
                                                 $status = "DELETED";
                                             } else if ($value2['status'] == 1001) {
                                                 $status = "AWAITING APPROVAL";
@@ -75,7 +78,16 @@ unset($_SESSION['inbox_message']);
                                             echo "<td>" . $value2['subject'] . "</td>";
                                             echo "<td>" . $value2['message'] . "</td>";
                                             echo "<td>" . $value2['createdat'] . "</td>";
-                                            echo "<td>" . $status . "</td>";
+                                            if ($value2['status'] == 1001) {
+                                                echo "<td> OPEN </td>";
+                                            } else {
+                                                echo "<td> CLOSED </td>";
+                                            }
+                                            if ($value2['status'] == 1001) {
+                                                echo "<td> <a href='?update_element&item=inbox_message&update_type=close&code=" . $value2['id'] . "'> CLOSE </td>";
+                                            } else {
+                                                echo "<td> CLOSED </td>";
+                                            }
                                             echo "</tr>";
                                         }
                                     }
