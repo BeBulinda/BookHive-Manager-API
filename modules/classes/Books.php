@@ -47,23 +47,6 @@ class Books extends Database {
 
     public function uploadBookPhoto($tmp_name, $location) {
 
-        $url = 'http://localhost/bookhive_web/?admin_requests&';
-//        $url = 'http://test.bookhive/?admin_requests&';
-        $header = array('Content-Type: multipart/form-data');
-
-
-        $ch = curl_init($url);  // Create a cURL handle
-        $cfile = new CURLFile('cats.jpg', 'image/jpeg', 'test_name');  // Create a CURLFile object
-// Assign POST data
-        $data = array('test_file' => $cfile);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-
-
-// Execute the handle
-        curl_exec($ch);
-
-
         $data['request_type'] = "upload_book_photo";
         $data['fields'] = array('file' => '@' . $tmp_name[0]);
 //        $data['tmp_name'] = $tmp_name;
@@ -92,7 +75,6 @@ class Books extends Database {
     }
 
     private function addBook() {
-
         $ecd_code = $this->getBookLevelRefTypeId("ECD");
         $primary_code = $this->getBookLevelRefTypeId("PRIMARY LEVEL");
         $secondary_code = $this->getBookLevelRefTypeId("SECONDARY LEVEL");
@@ -103,13 +85,41 @@ class Books extends Database {
         } else if ($_POST['book_level'] == $secondary_code) {
             $class = $_POST['secondary_class'];
         } else {
-            $class = 100;
+            $class = "NONE";
         }
 
-        if ($_POST['publisher_type'] == "company") {
-            $publisher = $_POST['publisher'];
-        } else if ($_POST['publisher_type'] == "self") {
-            $publisher = $_POST['self_publisher'];
+        if ($_SESSION['logged_in_user_type_details']['name'] == "BOOKHIVE") {
+            $publisher_type = strtoupper($_POST['publisher_type']);
+            $author = strtoupper($_POST['author']);
+            if ($_POST['publisher_type'] == "company") {
+                $publisher = $_POST['publisher'];
+            } else if ($_POST['publisher_type'] == "self") {
+                $publisher = $_POST['self_publisher'];
+            }
+        } else if ($_SESSION['logged_in_user_type_details']['name'] == "PUBLISHER") {
+            $publisher_type = "COMPANY";
+            $publisher = $_SESSION['userid'];
+            $author = strtoupper($_POST['author']);
+        } else if ($_SESSION['logged_in_user_type_details']['name'] == "SELF PUBLISHER") {
+            $publisher_type = "SELF";
+            $publisher = $_SESSION['userid'];
+            $author = $_SESSION['user_details']['firstname'] . " " . $_SESSION['user_details']['lastname'];
+        } else if ($_SESSION['logged_in_user_type_details']['name'] == "STAFF") {
+            if ($_SESSION['user_details']['level_type'] == $this->getUserTypeRefId("BOOKHIVE")) {
+                $publisher_type = strtoupper($_POST['publisher_type']);
+                $author = strtoupper($_POST['author']);
+                if ($_POST['publisher_type'] == "company") {
+                    $publisher = $_POST['publisher'];
+                } else if ($_POST['publisher_type'] == "self") {
+                    $publisher = $_POST['self_publisher'];
+                }
+            } else if ($_SESSION['user_details']['level_type'] == $this->getUserTypeRefId("PUBLISHER")) {
+                $publisher_type = "COMPANY";
+                $publisher = $_SESSION['user_details']['level_ref_id'];
+                $author = strtoupper($_POST['author']);
+            } else if ($_SESSION['user_details']['level_type'] == $this->getUserTypeRefId("BOOK SELLER")) {
+                
+            }
         }
 
         $sql = "INSERT INTO books (title, description, author, publisher_type, publisher, publication_year, isbn_number, type_id, level_id, class, print_type, price, cover_photo, createdby, lastmodifiedby)"
@@ -117,8 +127,8 @@ class Books extends Database {
         $stmt = $this->prepareQuery($sql);
         $stmt->bindValue("title", strtoupper($_POST['title']));
         $stmt->bindValue("description", strtoupper($_POST['description']));
-        $stmt->bindValue("author", strtoupper($_POST['author']));
-        $stmt->bindValue("publisher_type", strtoupper($_POST['publisher_type']));
+        $stmt->bindValue("author", $author);
+        $stmt->bindValue("publisher_type", $publisher_type);
         $stmt->bindValue("publisher", $publisher);
         $stmt->bindValue("publication_year", $_POST['publication_year']);
         $stmt->bindValue("isbn_number", strtoupper($_POST['isbn_number']));

@@ -34,7 +34,7 @@ $results = $db_handle->runQuery($query);
             function getState(val) {
                 $.ajax({
                     type: "POST",
-                    url: "http://localhost:8081/bookhive_v1.0_api/core/template/get_state.php",
+                    url: "http://localhost/bookhive_ui/core/template/get_state.php",
                     data: 'county_id=' + val,
                     success: function (data) {
                         $("#county-list").html(data);
@@ -44,7 +44,7 @@ $results = $db_handle->runQuery($query);
             function getLocation(val) {
                 $.ajax({
                     type: "POST",
-                    url: "http://localhost:8081/bookhive_v1.0_api/core/template/get_location.php",
+                    url: "http://localhost/bookhive_ui/core/template/get_location.php",
                     data: 'location_id=' + val,
                     success: function (data) {
                         $("#location-list").html(data);
@@ -103,7 +103,7 @@ $results = $db_handle->runQuery($query);
         ?>
 
         <!-- Basic scripts -->  
-<!--        <script src="web/js/excanvas.min.js"></script> 
+        <script src="web/js/excanvas.min.js"></script> 
         <script src="web/js/jquery.min.js"></script> 
         <script src="web/js/jquery.ui.custom.js"></script> 
         <script src="web/js/bootstrap.min.js"></script> 
@@ -123,7 +123,7 @@ $results = $db_handle->runQuery($query);
         <script src="web/js/select2.min.js"></script> 
         <script src="web/js/matrix.popover.js"></script> 
         <script src="web/js/jquery.dataTables.min.js"></script> 
-        <script src="web/js/matrix.tables.js"></script>-->
+        <script src="web/js/matrix.tables.js"></script>
 
         <script type="text/javascript">
             // This function is called from the pop-up menus to transfer to

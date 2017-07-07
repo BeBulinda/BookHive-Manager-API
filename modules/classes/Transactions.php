@@ -37,6 +37,26 @@ class Transactions extends Database {
             return false;
     }
 
+    public function closePiracy($code) {
+        $sql = "UPDATE piracy_reports SET status=1002 WHERE id=:code";
+        $stmt = $this->prepareQuery($sql);
+        $stmt->bindValue("code", $code);
+        if ($stmt->execute()) {
+            return true;
+        } else
+            return false;
+    }
+
+    public function closeInboxMessage($code) {
+        $sql = "UPDATE inbox_messages SET status=1002 WHERE id=:code";
+        $stmt = $this->prepareQuery($sql);
+        $stmt->bindValue("code", $code);
+        if ($stmt->execute()) {
+            return true;
+        } else
+            return false;
+    }
+
     public function updateTransaction($item, $code, $update_type) {
         if ($update_type == "deactivate") {
             $sql = "UPDATE transactions SET status=1002, lastmodifiedby=:lastmodifiedby, lastmodifiedat=:lastmodifiedat WHERE id=:code";
@@ -69,10 +89,10 @@ class Transactions extends Database {
         return true;
     }
 
-    public function getAllPublisherPiracyReports() {
+    public function getAllPublisherPiracyReports($publisher_code) {
         $sql = "SELECT * FROM piracy_reports WHERE assigned_publisher=:assigned_publisher ORDER BY id ASC";
         $stmt = $this->prepareQuery($sql);
-        $stmt->bindValue("assigned_publisher", $_SESSION['user_details']['level_ref_id']);
+        $stmt->bindValue("assigned_publisher", $publisher_code);
         $stmt->execute();
         $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -127,6 +147,26 @@ class Transactions extends Database {
         }
     }
 
+    public function getAllPublisherTransactions($publisher_code) {
+        $sql = "SELECT A.id, A.buyer_id, A.createdat, B.book_id, B.quantity, B.unit_price, B.assigned_staff, B.authorizedat, B.authorizedby, B.status FROM transactions A RIGHT OUTER JOIN transaction_details B ON A.id=B.transaction_id WHERE B.publisher=:publisher ORDER BY A.createdat DESC";
+        $stmt = $this->prepareQuery($sql);
+        $stmt->bindValue("publisher", $publisher_code);
+        $stmt->execute();
+        $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (count($info) == 0) {
+            $_SESSION['no_records'] = true;
+        } else {
+            $_SESSION['yes_records'] = true;
+            $values2 = array();
+            foreach ($info as $data) {
+                $values = array("id" => $data['id'], "buyer_id" => $data['buyer_id'], "book_id" => $data['book_id'], "quantity" => $data['quantity'], "unit_price" => $data['unit_price'], "createdat" => $data['createdat'], "authorizedat" => $data['authorizedat'], "authorizedby" => $data['authorizedby'], "status" => $data['status']);
+                array_push($values2, $values);
+            }
+            return json_encode($values2);
+        }
+    }
+
     public function getAllTransactions() {
         $sql = "SELECT * FROM transactions ORDER BY createdat DESC";
         $stmt = $this->prepareQuery($sql);
@@ -139,7 +179,7 @@ class Transactions extends Database {
             $_SESSION['yes_records'] = true;
             $values2 = array();
             foreach ($info as $data) {
-                $values = array("id" => $data['id'], "transaction_type" => $data['transaction_type'], "amount" => $data['amount'], "buyer_type" => $data['buyer_type'], "buyer_id" => $data['buyer_id'], "payment_option" => $data['payment_option'], "createdat" => $data['createdat'], "authorizedat" => $data['authorizedat'], "authorizedby" => $data['authorizedby'], "status" => $data['status']);
+                $values = array("id" => $data['id'], "transaction_type" => $data['transaction_type'], "amount" => $data['amount'], "buyer_type" => $data['buyer_type'], "buyer_id" => $data['buyer_id'], "payment_option" => $data['payment_option'], "createdat" => $data['createdat'], "status" => $data['status']);
                 array_push($values2, $values);
             }
             return json_encode($values2);

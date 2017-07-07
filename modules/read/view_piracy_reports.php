@@ -32,17 +32,22 @@ unset($_SESSION['piracy_report']);
                                     <th><h5>Seller's Name</h5></th>
                                     <th><h5>Created At</h5></th>
                                     <th><h5>Status</h5></th>
-                                    <?php if (!isset($_SESSION['publisher_staff']) OR $_SESSION['publisher_staff'] <> true) { ?> 
+                                    <?php if (!isset($_SESSION['publisher_staff']) AND $_SESSION['logged_in_user_type_details']['name'] <> "PUBLISHER") { ?> 
                                         <th><h5>Assign</h5></th>
                                     <?php } ?>
-                                    <th><h5>Delete</h5></th>
+                                    <th><h5>Action</h5></th>
                                 </tr>
 
                                 <?php
                                 if (!empty($_POST)) {
                                     $piracy_reports[] = $transactions->execute();
-                                } else if (isset($_SESSION['publisher_staff']) && $_SESSION['publisher_staff'] == true) {
-                                    $piracy_reports[] = $transactions->getAllPublisherPiracyReports();
+                                } else if (($_SESSION['logged_in_user_type_details']['name'] == "PUBLISHER") OR ( isset($_SESSION['publisher_staff']) && $_SESSION['publisher_staff'] == true)) {
+                                    if (isset($_SESSION['publisher_staff']) && $_SESSION['publisher_staff'] == true) {
+                                        $publisher_code = $_SESSION['user_details']['reference_id'];
+                                    } else {
+                                        $publisher_code = $_SESSION['userid'];
+                                    }
+                                    $piracy_reports[] = $transactions->getAllPublisherPiracyReports($publisher_code);
                                 } else {
                                     $piracy_reports[] = $transactions->getAllPiracyReports();
                                 }
@@ -54,7 +59,7 @@ unset($_SESSION['piracy_report']);
                                     echo "<td> </td>";
                                     echo "<td> </td>";
                                     echo "<td> </td>";
-                                    if (!isset($_SESSION['publisher_staff'])) {
+                                    if (!isset($_SESSION['publisher_staff']) AND $_SESSION['logged_in_user_type_details']['name'] <> "PUBLISHER") {
                                         echo "<td> </td>";
                                     }
                                     echo "<td> </td>";
@@ -85,15 +90,24 @@ unset($_SESSION['piracy_report']);
                                             echo "<td>" . $value2['reported_by'] . "</td>";
                                             echo "<td>" . $value2['seller_name'] . "</td>";
                                             echo "<td>" . $value2['createdat'] . "</td>";
-                                            echo "<td>" . $status . "</td>";
-                                            if (!isset($_SESSION['publisher_staff'])) {
+                                            if (isset($_SESSION['publisher_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "PUBLISHER") {
                                                 if ($value2['status'] == 1012) {
-                                                    echo "<td> ASSIGNED </td>";
+                                                    echo "<td> OPEN </td>";
                                                 } else {
-                                                    echo "<td> <a href='?update_element&item=piracy&update_type=assign&code=" . $value2['id'] . "'> ASSIGN </td>";
+                                                    echo "<td> CLOSED </td>";
                                                 }
+                                                if ($value2['status'] == 1012) {
+                                                    echo "<td> <a href='?update_element&item=piracy&update_type=close&code=" . $value2['id'] . "'> CLOSE </td>";
+                                                } else {
+                                                    echo "<td> CLOSED </td>";
+                                                }
+                                            } else {
+                                                echo "<td>" . $status . "</td>";
+                                                echo "<td> <a href='?update_element&item=piracy&update_type=assign&code=" . $value2['id'] . "'> ASSIGN </td>";
+                                                echo "<td> <a href='?update_element&item=piracy&update_type=close&code=" . $value2['id'] . "'> CLOSE </td>";
+                                                
+//                                                echo "<td> <a href='?update_element&item=piracy&update_type=delete&code=" . $value2['id'] . "'> DELETE </td>";
                                             }
-                                            echo "<td> <a href='?update_element&item=piracy&update_type=delete&code=" . $value2['id'] . "'> DELETE </td>";
                                             echo "</tr>";
                                         }
                                     }

@@ -40,6 +40,14 @@ if ($update_type == "assign") {
         $success = $transactions->deletePiracy($code);
         App::redirectTo("?view_piracy_reports");
     }
+} else if ($update_type == "close") {
+    if ($item == 'inbox_message') {
+        $success = $transactions->closeInboxMessage($code);
+        App::redirectTo("?view_inbox_messages");
+    } else if ($item == 'piracy') {
+        $success = $transactions->closePiracy($code);
+        App::redirectTo("?view_piracy_reports");
+    }
 }
 ?>
 

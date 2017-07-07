@@ -4,6 +4,7 @@ require_once WPATH . "modules/classes/Users.php";
 require_once WPATH . "modules/classes/System_Administration.php";
 $system_administration = new System_Administration();
 $users = new Users();
+
 if (!empty($_POST)) {
     $_SESSION['staff_firstname'] = $_POST['firstname'];
     $_SESSION['staff_lastname'] = $_POST['lastname'];
