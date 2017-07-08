@@ -17,10 +17,6 @@ else if (is_menu_set('forgot_password') != "") {
     $currentPage = WPATH . "modules/forgot_password.php";
     set_title("StaqPesa | Update Password");
 } 
-else if (is_menu_set('forgot_password_next') != "") {
-    $currentPage = WPATH . "modules/forgot_password_next.php";
-    set_title("StaqPesa | Update Password");
-}
 else if ( is_menu_set('add_book') != ""){
     $currentPage = WPATH . "modules/add/add_book.php";
     set_title("Bookhive | Add Book");

@@ -15,6 +15,16 @@ if (!empty($_POST)) {
     }
 }
 
+if (isset($_SESSION['update_pass_forgot']) AND ($_SESSION['update_pass_forgot'] == true)) {
+    ?>
+    <div class="alert alert-block alert-error fade in">
+        <button type="button" class="close" data-dismiss="alert">×</button>
+        <strong>Password successfully updated. Please check your email for the updated login credentials.</strong>
+    </div>
+    <?php
+    unset($_SESSION['update_pass_forgot']);
+} 
+
 if (isset($_SESSION['login_error'])) {
     ?>
     <div class="alert alert-block alert-error fade in">

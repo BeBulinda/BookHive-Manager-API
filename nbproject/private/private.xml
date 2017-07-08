@@ -3,14 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/wamp64/www/bookhive_ui/modules/read/view_transactions.php</file>
-            <file>file:/C:/wamp64/www/bookhive_ui/modules/classes/Books.php</file>
-            <file>file:/C:/wamp64/www/bookhive_ui/modules/update/update_element.php</file>
-            <file>file:/C:/wamp64/www/bookhive_ui/modules/read/view_piracy_reports.php</file>
-            <file>file:/C:/wamp64/www/bookhive_ui/modules/read/view_inbox_messages.php</file>
-            <file>file:/C:/wamp64/www/bookhive_ui/modules/menus/main_sidebar.php</file>
-            <file>file:/C:/wamp64/www/bookhive_ui/modules/classes/Transactions.php</file>
-            <file>file:/C:/wamp64/www/bookhive_ui/modules/classes/Users.php</file>
+            <file>file:/C:/wamp64/www/bookhive_ui/core/template/dbcontroller.php</file>
+            <file>file:/C:/wamp64/www/bookhive_ui/core/database/include.php</file>
         </group>
     </open-files>
 </project-private>

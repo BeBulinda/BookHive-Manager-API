@@ -11,10 +11,10 @@ class Users extends Database {
 //        
 //          else if ($_POST['action'] == "update_password") {
 //            return $this->updatePassword();
-//        } else if ($_POST['action'] == "forgot_password") {
-//            return $this->forgotPassword();
-//        } else 
-        else if ($_POST['action'] == "add_publisher") {
+//        }
+        else if ($_POST['action'] == "forgot_password") {
+            return $this->forgotPassword();
+        } else if ($_POST['action'] == "add_publisher") {
             return $this->addPublisher();
         } else if ($_POST['action'] == "add_self_publisher") {
             return $this->addSelfPublisher();
@@ -986,42 +986,46 @@ class Users extends Database {
         }
     }
 
+    public function randomString($length) {
+        $original_string = array_merge(range(0, 9), range('a', 'z'), range('A', 'Z'));
+        $original_string = implode("", $original_string);
+        return substr(str_shuffle($original_string), 0, $length);
+    }
+
     private function forgotPassword() {
-        $url = "http://pesa.staqpesa.com";
-        $phone_number = "+254 710 534013";
-        $email_address = "info@reflexconcepts.co.ke";
-        $sql = "SELECT s.firstname, s.middlename, s.lastname, c.email, c.reference_id FROM staff s LEFT JOIN contacts c ON s.id=c.reference_id WHERE s.firstname=:firstname AND (s.middlename=:lastname OR s.lastname=:lastname) AND c.email=:email";
+        $url = "http://bookhivekenya.com?login";
+        $phone_number = "+254 726 771144";
+        $email_address = "hello@bookhivekenya.com";
+        $sql = "SELECT * FROM user_logs WHERE username=:email";
         $stmt = $this->prepareQuery($sql);
-        $stmt->bindValue("firstname", $_POST['firstname']);
-        $stmt->bindValue("lastname", $_POST['lastname']);
-        $stmt->bindValue("email", $_POST['email']);
+        $stmt->bindValue("email", strtoupper($_POST['email']));
         $stmt->execute();
         $data = $stmt->fetchAll(PDO::FETCH_ASSOC);
         if (count($data) == 1) {
             $code = $this->randomString(20);
             $password = $this->randomString(10);
             $reference_id = $data[0]['reference_id'];
-            $username = $this->fetchLoggedInUserDetails($reference_id);
+//            $username = $this->fetchLoggedInUserDetails($reference_id);
 
-            $sender = "info@reflexconcepts.co.ke";
-            $headers = "From: StaqPesa <$sender>\r\n";
+            $sender = "hello@bookhivekenya.com";
+            $headers = "From: Bookhive Kenya <$sender>\r\n";
             $headers .= "MIME-Version: 1.0\r\n";
             $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
-            $subject = "Staqpesa Password Update";
+            $subject = "Bookhive Password Update";
             $message = "<html><body>"
                     . "<p><b>Hello " . $_POST['firstname'] . ",</b><br/>"
                     . "Your request for the reset of your account login credentials has been effected successfully. <br/>"
                     . "<ul>"
-                    . "<li><b>Username: </b>" . $username . "</li>"
+                    . "<li><b>Username: </b>" . $_POST['email'] . "</li>"
                     . "<li><b>Password: </b>" . $password . "</li>"
                     . "</ul>"
-                    . "Click on this link: <a href=' " . $url . "'>Staqpesa Login</a> to proceed with the login. <br/>"
+                    . "Click on this link: <a href=' " . $url . "'>Bookhive Login</a> to proceed with the login. <br/>"
                     . "For any enquiries, kindly contact us on:   <br/>"
                     . "<ul>"
                     . "<li><b>Telephone Number(s): </b>" . $phone_number . "</li>"
                     . "<li><b>Email Address: </b>" . $email_address . "</li>"
                     . "</ul>"
-                    . "Visit <a href='http://www.staqpesa.com'>staqpesa.com</a> for more information.<br/>"
+                    . "Visit <a href='http://bookhivekenya.com'>bookhivekenya.com</a> for more information.<br/>"
                     . "</body></html>";
 
             $sql2 = "UPDATE user_logs SET password=:password, password_new=:new_password_state, password_code=:password_code WHERE reference_id=:reference_id";

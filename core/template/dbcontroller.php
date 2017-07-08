@@ -6,6 +6,12 @@ class DBController {
 	private $database = "bookhive";
 	private $conn;
 	
+//        private $host = "localhost";
+//	private $user = "bookhive_rcadmin";
+//	private $password = "#rcadmin@1234";
+//	private $database = "bookhive_main";
+//	private $conn;
+	
 	function __construct() {
 		$this->conn = $this->connectDB();
 	}
