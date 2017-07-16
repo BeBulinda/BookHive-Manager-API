@@ -14,56 +14,6 @@ class Books extends Database {
         }
     }
 
-    public function sendHttpRequestPost($data_string) {
-        $url = 'http://localhost/bookhive_web/?admin_requests&';
-//        $url = 'http://test.bookhive/?admin_requests&';
-        $header = array('Content-Type: multipart/form-data');
-
-
-
-//$fields = array('file' => '@' . $_FILES['file']['tmp_name'][0]);
-//$token = 'NfxoS9oGjA6MiArPtwg4aR3Cp4ygAbNA2uv6Gg4m'; 
-//$resource = curl_init();
-//curl_setopt($resource, CURLOPT_URL, $url);
-//curl_setopt($resource, CURLOPT_HTTPHEADER, $header);
-//curl_setopt($resource, CURLOPT_RETURNTRANSFER, 1);
-//curl_setopt($resource, CURLOPT_POST, 1);
-//curl_setopt($resource, CURLOPT_POSTFIELDS, $fields);
-////curl_setopt($resource, CURLOPT_COOKIE, 'apiToken=' . $token);
-//$result = json_decode(curl_exec($resource));
-//curl_close($resource);
-
-
-        $curl_session = curl_init();
-        curl_setopt($curl_session, CURLOPT_URL, $url);
-        curl_setopt($curl_session, CURLOPT_HTTPHEADER, $header);
-        curl_setopt($curl_session, CURLOPT_POST, true);
-        curl_setopt($curl_session, CURLOPT_POSTFIELDS, $data_string);
-        curl_setopt($curl_session, CURLOPT_RETURNTRANSFER, true);
-        $response = curl_exec($curl_session);
-        curl_close($curl_session);
-        return $response;
-    }
-
-    public function uploadBookPhoto($tmp_name, $location) {
-
-        $data['request_type'] = "upload_book_photo";
-        $data['fields'] = array('file' => '@' . $tmp_name[0]);
-//        $data['tmp_name'] = $tmp_name;
-        $data['location'] = $location;
-        $data_string = http_build_query($data);
-        $process_request = $this->sendHttpRequestPost($data_string);
-        if ($process_request) {
-            $decoded_response = json_decode($process_request, true);
-            $response['status'] = $decoded_response['status'];
-            $response['message'] = $decoded_response['message'];
-        } else {
-            $response['status'] = 400;
-            $response['message'] = "Sorry: There was an error processing the request. Please try again later";
-        }
-        return $response;
-    }
-
     public function getBookLevelRefTypeId($level) {
         $sql = "SELECT id, status FROM book_levels WHERE name=:level";
         $stmt = $this->prepareQuery($sql);
@@ -147,6 +97,26 @@ class Books extends Database {
     public function getAllBooks() {
         $sql = "SELECT * FROM books ORDER BY id ASC";
         $stmt = $this->prepareQuery($sql);
+        $stmt->execute();
+        $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        if (count($info) == 0) {
+            $_SESSION['no_records'] = true;
+        } else {
+            $_SESSION['yes_records'] = true;
+            $values2 = array();
+            foreach ($info as $data) {
+                $values = array("id" => $data['id'], "title" => $data['title'], "description" => $data['description'], "author" => $data['author'], "publisher_type" => $data['publisher_type'], "publisher" => $data['publisher'], "publication_year" => $data['publication_year'], "isbn_number" => $data['isbn_number'], "type_id" => $data['type_id'], "level_id" => $data['level_id'], "price" => $data['price'], "cover_photo" => $data['cover_photo'], "status" => $data['status'], "createdat" => $data['createdat'], "createdby" => $data['createdby'], "lastmodifiedat" => $data['lastmodifiedat'], "lastmodifiedby" => $data['lastmodifiedby']);
+                array_push($values2, $values);
+            }
+            return json_encode($values2);
+        }
+    }
+
+    public function getAllPublisherBooks($publisher_code) {
+        $sql = "SELECT * FROM books WHERE publisher=:publisher ORDER BY id ASC";
+        $stmt = $this->prepareQuery($sql);
+        $stmt->bindValue("publisher", $publisher_code);
         $stmt->execute();
         $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

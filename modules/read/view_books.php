@@ -1,5 +1,6 @@
 <?php
-if (!App::isLoggedIn()) App::redirectTo("?");
+if (!App::isLoggedIn())
+    App::redirectTo("?");
 require_once WPATH . "modules/classes/Books.php";
 require_once WPATH . "modules/classes/Users.php";
 require_once WPATH . "modules/classes/System_Administration.php";
@@ -22,7 +23,15 @@ unset($_SESSION['book']);
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
                         <h5>Books</h5>
-                        <?php require_once('modules/menus/sub-sub-menu-buttons.php'); ?>
+
+                        <?php
+                        if (isset($_SESSION['add_success'])) {
+                            echo "Record successfully added...";
+                            unset($_SESSION['add_success']);
+                        }
+
+                        require_once('modules/menus/sub-sub-menu-buttons.php');
+                        ?>
                     </div>
                     <div class="widget-content nopadding">
 
@@ -31,16 +40,31 @@ unset($_SESSION['book']);
                                 <tr>
                                     <th><h5>ID</h5></th>
                                     <th><h5>Title</h5></th>
-                                    <th><h5>Publisher</h5></th>
+                                    <?php if (isset($_SESSION['publisher_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "PUBLISHER") { ?> 
+                                        <th><h5>Publisher</h5></th>
+                                    <?php } ?>
                                     <th><h5>Author</h5></th>
                                     <th><h5>ISBN Number</h5></th>
                                     <th><h5>Level</h5></th>
                                     <th><h5>Status</h5></th>
+                                    <?php if (isset($_SESSION['bookhive_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "BOOKHIVE") { ?> 
+                                        <th><h5>Approve</h5></th>
+                                        <th><h5>Reject</h5></th>
+                                    <?php } else if (isset($_SESSION['publisher_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "PUBLISHER") { ?> 
+                                        <th><h5>Action</h5></th>
+                                    <?php } ?>
                                 </tr>
 
                                 <?php
                                 if (!empty($_POST)) {
                                     $books_data[] = $books->execute();
+                                } else if (($_SESSION['logged_in_user_type_details']['name'] == "PUBLISHER") OR ( isset($_SESSION['publisher_staff']) && $_SESSION['publisher_staff'] == true)) {
+                                    if (isset($_SESSION['publisher_staff']) && $_SESSION['publisher_staff'] == true) {
+                                        $publisher_code = $_SESSION['user_details']['reference_id'];
+                                    } else {
+                                        $publisher_code = $_SESSION['userid'];
+                                    }
+                                    $books_data[] = $books->getAllPublisherBooks($publisher_code);
                                 } else {
                                     $books_data[] = $books->getAllBooks();
                                 }
@@ -48,10 +72,19 @@ unset($_SESSION['book']);
                                     echo "<tr>";
                                     echo "<td>  No record found...</td>";
                                     echo "<td> </td>";
+                                    if (isset($_SESSION['publisher_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "PUBLISHER") {
+                                        echo "<td> </td>";
+                                    }
                                     echo "<td> </td>";
                                     echo "<td> </td>";
                                     echo "<td> </td>";
                                     echo "<td> </td>";
+                                    if (isset($_SESSION['bookhive_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "BOOKHIVE") {
+                                        echo "<td> </td>";
+                                        echo "<td> </td>";
+                                    } else if (isset($_SESSION['publisher_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "PUBLISHER") {
+                                        echo "<td> </td>";
+                                    }
                                     echo "</tr>";
                                     unset($_SESSION['no_records']);
                                 } else if (isset($_SESSION['yes_records']) AND $_SESSION['yes_records'] == true) {
@@ -80,19 +113,43 @@ unset($_SESSION['book']);
                                                 $publisher_name = $publisher_details['firstname'] . " " . $publisher_details['lastname'];
                                             }
 
-                                            
+
 //                                            $book_type_details = $system_administration->fetchBookTypeDetails($value2['type_id']);
                                             $book_level_details = $system_administration->fetchBookLevelDetails($value2['level_id']);
 
                                             echo "<tr>";
                                             echo "<td> <a href='?individual_book&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
                                             echo "<td>" . $value2['title'] . "</td>";
-                                            echo "<td>" . $publisher_name . "</td>";
+
+                                            if (isset($_SESSION['publisher_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "PUBLISHER") {
+                                                echo "<td>" . $publisher_name . "</td>";
+                                            }
+
 //                                            echo "<td>" . $book_type_details['name'] . "</td>";
                                             echo "<td>" . $value2['author'] . "</td>";
                                             echo "<td>" . $value2['isbn_number'] . "</td>";
                                             echo "<td>" . $book_level_details['name'] . "</td>";
                                             echo "<td>" . $status . "</td>";
+                                            if (isset($_SESSION['bookhive_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "BOOKHIVE") {
+                                                if ($value2['status'] == 1001) {
+                                                    echo "<td> <a href='?update_element&item=book&update_type=approve&code=" . $value2['id'] . "'> APPROVE </td>";
+                                                } else {
+                                                    echo "<td>" . $status . "</td>";
+                                                }
+                                                if ($value2['status'] == 1001) {
+                                                    echo "<td> <a href='?update_element&item=book&update_type=reject&code=" . $value2['id'] . "'> REJECT </td>";
+                                                } else {
+                                                    echo "<td>" . $status . "</td>";
+                                                }
+                                            } else if (isset($_SESSION['publisher_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "PUBLISHER") {
+                                                if ($value2['status'] == 1021) {
+                                                    echo "<td> <a href='?update_element&item=book&update_type=deactivate&code=" . $value2['id'] . "'> DEACTIVATE </td>";
+                                                } else if ($value2['status'] == 1002) {
+                                                    echo "<td> <a href='?update_element&item=book&update_type=activate&code=" . $value2['id'] . "'> ACTIVATE </td>";
+                                                } else {
+                                                    echo "<td>" . $status . "</td>";
+                                                }
+                                            }
                                             echo "</tr>";
                                         }
                                     }

@@ -1,5 +1,6 @@
 <?php
-if (!App::isLoggedIn()) App::redirectTo("?");
+if (!App::isLoggedIn())
+    App::redirectTo("?");
 require_once WPATH . "modules/classes/Transactions.php";
 $transactions = new Transactions();
 
@@ -18,7 +19,7 @@ unset($_SESSION['transaction_detail']);
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
                         <h5>Transaction Details</h5>
-                        <?php require_once('modules/menus/sub-sub-menu-buttons.php'); ?>
+<?php require_once('modules/menus/sub-sub-menu-buttons.php'); ?>
                     </div>
                     <div class="widget-content nopadding">
 
@@ -31,6 +32,7 @@ unset($_SESSION['transaction_detail']);
                                     <th><h5>Unit Price</h5></th>
                                     <th><h5>Quantity</h5></th>
                                     <th><h5>Publisher</h5></th>
+                                    <th><h5>Delivery Status</h5></th>
                                 </tr>
 
                                 <?php
@@ -52,12 +54,32 @@ unset($_SESSION['transaction_detail']);
                                     echo "<td> </td>";
                                     echo "<td> </td>";
                                     echo "<td> </td>";
+                                    echo "<td> </td>";
                                     echo "</tr>";
                                     unset($_SESSION['no_records']);
                                 } else if (isset($_SESSION['yes_records']) AND $_SESSION['yes_records'] == true) {
                                     foreach ($transaction_details as $key => $value) {
                                         $inner_array[$key] = json_decode($value, true); // this will give key val pair array
                                         foreach ((array) $inner_array[$key] as $key2 => $value2) {
+                                            if ($value2['status'] == 1000) {
+                                                $delivery_status = "DELETED";
+                                            } else if ($value2['status'] == 1001) {
+                                                $delivery_status = "AWAITING APPROVAL";
+                                            } else if ($value2['status'] == 1002) {
+                                                $delivery_status = "NOT ACTIVE";
+                                            } else if ($value2['status'] == 1021) {
+                                                $delivery_status = "ACTIVE";
+                                            } else if ($value2['status'] == 1010) {
+                                                $delivery_status = "APPROVAL REJECTED";
+                                            } else if ($value2['status'] == 1011) {
+                                                $delivery_status = "DELIVERY IN PROGRESS";
+                                            } else if ($value2['status'] == 1012) {
+                                                $delivery_status = "ASSIGNED";
+                                            } else if ($value2['status'] == 1030) {
+                                                $delivery_status = "DELIVERY REJECTED";
+                                            } else if ($value2['status'] == 1031) {
+                                                $delivery_status = "DELIVERY CONFIRMED";
+                                            }
                                             echo "<tr>";
 //                                            echo "<td> <a href='?individual_transaction_detail&code=" . $value2['id'] . "'>" . $value2['transaction_id'] . "</td>";
                                             echo "<td>" . $value2['transaction_id'] . "</td>";
@@ -66,6 +88,7 @@ unset($_SESSION['transaction_detail']);
                                             echo "<td>" . $value2['unit_price'] . "</td>";
                                             echo "<td>" . $value2['quantity'] . "</td>";
                                             echo "<td>" . $value2['publisher'] . "</td>";
+                                            echo "<td>" . $delivery_status . "</td>";
                                             echo "</tr>";
                                         }
                                     }

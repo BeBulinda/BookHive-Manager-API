@@ -79,7 +79,7 @@ unset($_SESSION['transaction']);
                                                     $status = "APPROVAL REJECTED";
                                                 }
                                                 echo "<tr>";
-                                                echo "<td> <a href='?view_individual_transaction&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+                                                echo "<td> <a href='?view_individual_transaction&code=" . $value2['transaction_id'] . "'>" . $value2['transaction_id'] . "</td>";
                                                 echo "<td>" . $value2['buyer_type'] . "</td>";
                                                 echo "<td>" . $value2['buyer_id'] . "</td>";
                                                 echo "<td>" . $value2['amount'] . "</td>";
@@ -89,17 +89,17 @@ unset($_SESSION['transaction']);
 //                                            echo "<td> <a href='?update_transaction&update_type=edit&code=" . $value2['id'] . "'> EDIT </td>";
 
                                                 if ($value2['status'] == 1001) {
-                                                    echo "<td> <a href='?update_element&item=transaction&update_type=accept_approval&code=" . $value2['id'] . "'> APPROVE </td>";
-                                                    echo "<td> <a href='?update_transaction&update_type=reject_approval&code=" . $value2['id'] . "'> REJECT </td>";
+                                                    echo "<td> <a href='?update_element&item=transaction&update_type=accept_approval&code=" . $value2['transaction_id'] . "'> APPROVE </td>";
+                                                    echo "<td> <a href='?update_transaction&update_type=reject_approval&code=" . $value2['transaction_id'] . "'> REJECT </td>";
                                                 }
 
                                                 if ($value2['status'] == 1002) {
-                                                    echo "<td> <a href='?update_transaction&update_type=activate&code=" . $value2['id'] . "'> ACTIVATE </td>";
+                                                    echo "<td> <a href='?update_transaction&update_type=activate&code=" . $value2['transaction_id'] . "'> ACTIVATE </td>";
                                                 } else if ($value2['status'] == 1021) {
-                                                    echo "<td> <a href='?update_transaction&update_type=deactivate&code=" . $value2['id'] . "'> DEACTIVATE </td>";
+                                                    echo "<td> <a href='?update_transaction&update_type=deactivate&code=" . $value2['transaction_id'] . "'> DEACTIVATE </td>";
                                                 }
 
-                                                echo "<td> <a href='?update_transaction&update_type=delete&code=" . $value2['id'] . "'> DELETE </td>";
+                                                echo "<td> <a href='?update_transaction&update_type=delete&code=" . $value2['transaction_id'] . "'> DELETE </td>";
 
                                                 echo "</tr>";
                                             }
@@ -124,7 +124,7 @@ unset($_SESSION['transaction']);
                                         <th><h5>Buyer's Name</h5></th>
                                         <th><h5>Book Title</h5></th>
                                         <th><h5>Quantity</h5></th>
-                                        <th><h5>Unit Price</h5></th>
+                                        <!--<th><h5>Unit Price</h5></th>-->
                                         <th><h5>Created At</h5></th>
                                         <th><h5>Status</h5></th>
                                         <th><h5>Approve</h5></th>
@@ -155,32 +155,42 @@ unset($_SESSION['transaction']);
                                             $inner_array[$key] = json_decode($value, true); // this will give key val pair array
                                             foreach ((array) $inner_array[$key] as $key2 => $value2) {
                                                 if ($value2['status'] == 1000) {
-                                                    $status = "DELETED";
+                                                    $delivery_status = "DELETED";
                                                 } else if ($value2['status'] == 1001) {
-                                                    $status = "AWAITING APPROVAL";
+                                                    $delivery_status = "AWAITING APPROVAL";
                                                 } else if ($value2['status'] == 1002) {
-                                                    $status = "NOT ACTIVE";
+                                                    $delivery_status = "NOT ACTIVE";
                                                 } else if ($value2['status'] == 1021) {
-                                                    $status = "ACTIVE";
-                                                } else if ($value2['status'] == 1011) {
-                                                    $status = "APPROVAL ACCEPTED";
+                                                    $delivery_status = "ACTIVE";
                                                 } else if ($value2['status'] == 1010) {
-                                                    $status = "APPROVAL REJECTED";
+                                                    $delivery_status = "APPROVAL REJECTED";
+                                                } else if ($value2['status'] == 1011) {
+                                                    $delivery_status = "DELIVERY IN PROGRESS";
+                                                } else if ($value2['status'] == 1012) {
+                                                    $delivery_status = "ASSIGNED";
+                                                } else if ($value2['status'] == 1030) {
+                                                    $delivery_status = "DELIVERY REJECTED";
+                                                } else if ($value2['status'] == 1031) {
+                                                    $delivery_status = "DELIVERY CONFIRMED";
                                                 }
                                                 echo "<tr>";
-                                                echo "<td> <a href='#'>" . $value2['id'] . "</td>";
+                                                echo "<td> <a href='#'>" . $value2['transaction_id'] . "</td>";
                                                 echo "<td>" . $value2['buyer_id'] . "</td>";
                                                 echo "<td>" . $value2['book_id'] . "</td>";
                                                 echo "<td>" . $value2['quantity'] . "</td>";
-                                                echo "<td>" . $value2['unit_price'] . "</td>";
+//                                                echo "<td>" . $value2['unit_price'] . "</td>";
                                                 echo "<td>" . $value2['createdat'] . "</td>";
-                                                echo "<td>" . $status . "</td>";
+                                                echo "<td>" . $delivery_status . "</td>";
                                                 if ($value2['status'] == 1001) {
-                                                    echo "<td> <a href='?update_element&item=transaction&update_type=accept_approval&code=" . $value2['id'] . "'> APPROVE </td>";
-                                                    echo "<td> <a href='?update_transaction&update_type=reject_approval&code=" . $value2['id'] . "'> REJECT </td>";
+
+                                                    echo "<td> <a href='?update_element&item=transaction_item&update_type=approve&code=" . $value2['transaction_detail_id'] . "'> APPROVE </td>";
+                                                    echo "<td> <a href='?update_element&item=transaction_item&update_type=reject&code=" . $value2['transaction_detail_id'] . "'> REJECT </td>";
+
+//                                                    echo "<td> <a href='?update_element&item=transaction_item&update_type=approve&code=" . $value2['transaction_detail_id'] . "'> APPROVE </td>";
+//                                                    echo "<td> <a href='?update_element&item=transaction_item&update_type=reject&code=" . $value2['transaction_detail_id'] . "'> REJECT </td>";
                                                 } else {
-                                                    echo "<td>" . $status . "</td>";
-                                                    echo "<td>" . $status . "</td>";
+                                                    echo "<td>" . $delivery_status . "</td>";
+                                                    echo "<td>" . $delivery_status . "</td>";
                                                 }
 //                                                echo "<td> <a href='?update_element&item=piracy&update_type=delete&code=" . $value2['id'] . "'> DELETE </td>";
                                                 echo "</tr>";

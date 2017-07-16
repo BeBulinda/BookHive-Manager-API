@@ -9,49 +9,38 @@ $users = new Users();
 $books = new Books();
 if (!empty($_POST)) {
 
-    $createdby = $_POST['createdby'];
-    $filename = md5($createdby . time());
+    $filename = md5($_POST['createdby'] . time());
     $cover_photo_name = $_FILES['cover_photo']['name'];
     $tmp_name = $_FILES['cover_photo']['tmp_name'];
+    $cover_photo_type = $_FILES['cover_photo']['type'];
     $extension = substr($cover_photo_name, strpos($cover_photo_name, '.') + 1);
     $cover_photo = strtoupper($filename . '.' . $extension);
     $_SESSION['filename'] = $cover_photo;
 
-    $url = "http://localhost/bookhive_web/";
-//    $url = "http://test.bookhivekenya.com/";
-
-    if ($_POST['book_level'] == 1) {
-//        $location = 'http://localhost/bookhive_web/modules/images/books/ecd/';
-        $location = $url . 'modules/images/books/ecd/';
-    } else if ($_POST['book_level'] == 2) {
-        $location = $url . 'modules/images/books/primary/';
-    } else if ($_POST['book_level'] == 3) {
-        $location = $url . 'modules/images/books/secondary/';
-    } else if ($_POST['book_level'] == 4) {
-        $location = $url . 'modules/images/books/adult/';
-    }
+//    $url = 'http://localhost/bookhive_web/?admin_requests&';
+    $url = 'http://test.bookhivekenya.com/?admin_requests&';
 
 
-    $request = $books->uploadBookPhoto($tmp_name, $location . $cover_photo);
+    $cfile = new CURLFile($tmp_name, $cover_photo_type, $cover_photo_name);
+    $data = array("cover_photo" => $cfile, "book_level" => $_POST['book_level'], "cover_name" => $cover_photo);
 
-//    if ($request['status'] == 200) {
+    $curl_session = curl_init();
+    curl_setopt($curl_session, CURLOPT_URL, $url);
+    curl_setopt($curl_session, CURLOPT_POST, true);
+    curl_setopt($curl_session, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($curl_session, CURLOPT_RETURNTRANSFER, true);
+    $response = curl_exec($curl_session);
+    curl_close($curl_session);
+
+    if ($response == true) {
         $success = $books->execute();
         if (is_bool($success) && $success == true) {
             $_SESSION['add_success'] = true;
         }
         App::redirectTo("?view_books");
-//    } else if ($request['status'] == 500) {
-//        $_SESSION['create_error'] = "Error uploading photo. Kindly add the book again.";
-//    }
-//    if (move_uploaded_file($tmp_name, $location . $cover_photo)) {
-//        $success = $books->execute();
-//        if (is_bool($success) && $success == true) {
-//            $_SESSION['add_success'] = true;
-//        }
-//        App::redirectTo("?view_books");
-//    } else {
-//        $_SESSION['create_error'] = "Error uploading photo. Kindly add the book again.";
-//    }
+    } else {
+        $_SESSION['add_error'] = "Error uploading the book photo. Kindly add the book again.";
+    }
 }
 ?>
 
@@ -59,17 +48,13 @@ if (!empty($_POST)) {
     <div id="content-header">
         <div id="breadcrumb"> <a href="?home" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="?view_books">Books</a> <a href="?add_book" class="current">Add Book</a> </div>
         <h1>Add Book</h1>
+        <?php
+        if (isset($_SESSION['add_error'])) {
+            echo $_SESSION['add_error'];
+            unset($_SESSION['add_error']);
+        }
+        ?>
     </div>
-
-    <?php
-    if (isset($_SESSION['add_success'])) {
-        echo "Record successfully added...";
-        unset($_SESSION['add_success']);
-    } else if (!empty($_POST)) {
-        echo "Error adding record...";
-    }
-    ?>
-
     <div class="container-fluid"><hr>
         <div class="row-fluid">
             <div class="span12">
@@ -77,7 +62,7 @@ if (!empty($_POST)) {
                     <div class="widget-content nopadding">
                         <form class="form-horizontal" method="post" name="basic_validate" id="basic_validate" novalidate="novalidate" enctype="multipart/form-data">
                             <input type="hidden" name="action" value="add_book"/>
-                            <input type="hidden" name="createdby" value="<?php echo 01; //  echo $_SESSION['userid'];                 ?>"/>
+                            <input type="hidden" name="createdby" value="<?php echo 01; //  echo $_SESSION['userid'];                      ?>"/>
 
                             <div class="control-group">
                                 <label class="control-label">Title</label>
@@ -86,12 +71,12 @@ if (!empty($_POST)) {
                                 </div>
                             </div>
                             <?php if ($_SESSION['logged_in_user_type_details']['name'] <> "SELF PUBLISHER") { ?>
-                            <div class="control-group">
-                                <label class="control-label">Author</label>
-                                <div class="controls">
-                                    <input type="text" name="author" id="author">
+                                <div class="control-group">
+                                    <label class="control-label">Author</label>
+                                    <div class="controls">
+                                        <input type="text" name="author" id="author">
+                                    </div>
                                 </div>
-                            </div>
                             <?php } ?>
                             <div class="control-group">
                                 <label class="control-label">Description</label>
@@ -99,36 +84,36 @@ if (!empty($_POST)) {
                                     <textarea class="span11" name="description" id="description"></textarea>
                                 </div>
                             </div>
-                            
+
                             <?php if ($_SESSION['logged_in_user_type_details']['name'] == "BOOKHIVE") { ?>
-                            <div class="control-group">
-                                <label class="control-label">Publisher Type</label>
-                                <div class="controls">
-                                    <select class="publish" name="publisher_type">
-                                        <option>Select publisher type</option>
-                                        <option value="company">Company/Business</option>
-                                        <option value="self">Self Publisher</option>
-                                    </select>
+                                <div class="control-group">
+                                    <label class="control-label">Publisher Type</label>
+                                    <div class="controls">
+                                        <select class="publish" name="publisher_type">
+                                            <option>Select publisher type</option>
+                                            <option value="company">Company/Business</option>
+                                            <option value="self">Self Publisher</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <!--  if ($publisher_type == "company")-->
-                            <div class="control-group company publisher">
-                                <label class="control-label">Publisher</label>
-                                <div class="controls">
-                                    <select name="publisher" id="publisher">
-                                        <?php echo $users->getPublishers(); ?>
-                                    </select>
+                                <!--  if ($publisher_type == "company")-->
+                                <div class="control-group company publisher">
+                                    <label class="control-label">Publisher</label>
+                                    <div class="controls">
+                                        <select name="publisher" id="publisher">
+                                            <?php echo $users->getPublishers(); ?>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-                            <!--  if ($publisher_type == "self")-->
-                            <div class="control-group self publisher">
-                                <label class="control-label">Self Publisher</label>
-                                <div class="controls">
-                                    <select name="self_publisher">
-                                        <?php echo $users->getSelfPublishers(); ?>
-                                    </select>
-                                </div>
-                            </div>                            
+                                <!--  if ($publisher_type == "self")-->
+                                <div class="control-group self publisher">
+                                    <label class="control-label">Self Publisher</label>
+                                    <div class="controls">
+                                        <select name="self_publisher">
+                                            <?php echo $users->getSelfPublishers(); ?>
+                                        </select>
+                                    </div>
+                                </div>                            
                             <?php } ?>
 
                             <div class="control-group">
