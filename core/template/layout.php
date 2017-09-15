@@ -21,7 +21,7 @@ $results = $db_handle->runQuery($query);
         <link rel="stylesheet" href="web/css/fullcalendar.css" />
         <link rel="stylesheet" href="web/css/matrix-style.css" />
         <link rel="stylesheet" href="web/css/matrix-media.css" />
-        <link href="web/web/font-awesome/css/font-awesome.css" rel="stylesheet" />
+        <link href="web/font-awesome/css/font-awesome.css" rel="stylesheet" />
         <link rel="stylesheet" href="css/jquery.gritter.css" />
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>
         <!--Show Hide fields-->

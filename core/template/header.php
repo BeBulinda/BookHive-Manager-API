@@ -22,7 +22,6 @@ if ($_SESSION['logged_in_user_type_details']['name'] == "STAFF") {
 </div>
 <!--close-Header-part--> 
 
-
 <!--top-Header-menu-->
 <div id="user-nav" class="navbar navbar-inverse">
     <ul class="nav">
