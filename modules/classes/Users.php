@@ -152,6 +152,15 @@ class Users extends Database {
         return $info[0];
     }
 
+    public function fetchIndividualUserDetails($code) {
+        $sql = "SELECT * FROM individual_users WHERE id=:code";
+        $stmt = $this->prepareQuery($sql);
+        $stmt->bindParam("code", $code);
+        $stmt->execute();
+        $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $info[0];
+    }
+
     public function getNextPublisherId() {
         $publisher_id = $this->executeQuery("SELECT max(id) as publisher_id_max FROM publishers");
         $publisher_id = $publisher_id[0]['publisher_id_max'] + 1;

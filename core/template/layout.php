@@ -30,7 +30,7 @@ $results = $db_handle->runQuery($query);
         <!--Show Hide fields END-->
         <!--Listing FILTER-->
         <script src="https://code.jquery.com/jquery-2.1.1.min.js" type="text/javascript"></script>
-        <script>
+<!--        <script>
             function getState(val) {
                 $.ajax({
                     type: "POST",
@@ -51,7 +51,31 @@ $results = $db_handle->runQuery($query);
                     }
                 });
             }
+        </script>-->
+        
+        <script>
+            function getState(val) {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost/bookhive_api/core/template/get_state.php",
+                    data: 'county_id=' + val,
+                    success: function (data) {
+                        $("#county-list").html(data);
+                    }
+                });
+            }
+            function getLocation(val) {
+                $.ajax({
+                    type: "POST",
+                    url: "http://localhost:8081/bookhive_api/core/template/get_location.php",
+                    data: 'location_id=' + val,
+                    success: function (data) {
+                        $("#location-list").html(data);
+                    }
+                });
+            }
         </script>
+        
         <!--Listing FILTER END-->
         <?php
         /*         * *

@@ -428,7 +428,7 @@ class Transactions extends Database {
     }
 
     public function getAllPublisherTransactions($publisher_code) {
-        $sql = "SELECT A.id AS transaction_id, A.buyer_id, A.createdat, B.id AS transaction_detail_id, B.book_id, B.quantity, B.unit_price, B.assigned_staff, B.authorizedat, B.authorizedby, B.status, B.delivery_status FROM transactions A RIGHT OUTER JOIN transaction_details B ON A.id=B.transaction_id WHERE B.publisher=:publisher ORDER BY A.createdat DESC";
+        $sql = "SELECT A.count, A.id AS transaction_id, A.buyer_type, A.buyer_id, A.createdat, B.id AS transaction_detail_id, B.book_id, B.quantity, B.unit_price, B.assigned_staff, B.authorizedat, B.authorizedby, B.status, B.delivery_status FROM transactions A RIGHT OUTER JOIN transaction_details B ON A.id=B.transaction_id WHERE B.publisher=:publisher ORDER BY A.count DESC";
         $stmt = $this->prepareQuery($sql);
         $stmt->bindValue("publisher", $publisher_code);
         $stmt->execute();
@@ -440,7 +440,7 @@ class Transactions extends Database {
             $_SESSION['yes_records'] = true;
             $values2 = array();
             foreach ($info as $data) {
-                $values = array("transaction_id" => $data['transaction_id'], "transaction_detail_id" => $data['transaction_detail_id'], "buyer_id" => $data['buyer_id'], "book_id" => $data['book_id'], "quantity" => $data['quantity'], "unit_price" => $data['unit_price'], "createdat" => $data['createdat'], "authorizedat" => $data['authorizedat'], "authorizedby" => $data['authorizedby'], "status" => $data['status'], "delivery_status" => $data['delivery_status']);
+                $values = array("count" => $data['count'], "transaction_id" => $data['transaction_id'], "transaction_detail_id" => $data['transaction_detail_id'], "buyer_type" => $data['buyer_type'], "buyer_id" => $data['buyer_id'], "book_id" => $data['book_id'], "quantity" => $data['quantity'], "unit_price" => $data['unit_price'], "createdat" => $data['createdat'], "authorizedat" => $data['authorizedat'], "authorizedby" => $data['authorizedby'], "status" => $data['status'], "delivery_status" => $data['delivery_status']);
                 array_push($values2, $values);
             }
             return json_encode($values2);
@@ -448,7 +448,7 @@ class Transactions extends Database {
     }
 
     public function getAllTransactions() {
-        $sql = "SELECT * FROM transactions ORDER BY createdat DESC";
+        $sql = "SELECT * FROM transactions ORDER BY count DESC";
         $stmt = $this->prepareQuery($sql);
         $stmt->execute();
         $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -459,7 +459,7 @@ class Transactions extends Database {
             $_SESSION['yes_records'] = true;
             $values2 = array();
             foreach ($info as $data) {
-                $values = array("transaction_id" => $data['id'], "transaction_type" => $data['transaction_type'], "amount" => $data['amount'], "buyer_type" => $data['buyer_type'], "buyer_id" => $data['buyer_id'], "payment_option" => $data['payment_option'], "createdat" => $data['createdat'], "status" => $data['status']);
+                $values = array("count" => $data['count'], "transaction_id" => $data['id'], "transaction_type" => $data['transaction_type'], "amount" => $data['amount'], "buyer_type" => $data['buyer_type'], "buyer_id" => $data['buyer_id'], "payment_option" => $data['payment_option'], "createdat" => $data['createdat'], "status" => $data['status']);
                 array_push($values2, $values);
             }
             return json_encode($values2);
@@ -467,7 +467,7 @@ class Transactions extends Database {
     }
 
     public function getTransactionDetails($transaction_id) {
-        $sql = "SELECT * FROM transaction_details WHERE transaction_id=:transaction_id ORDER BY id ASC";
+        $sql = "SELECT * FROM transaction_details WHERE transaction_id=:transaction_id ORDER BY id DESC";
         $stmt = $this->prepareQuery($sql);
         $stmt->bindValue("transaction_id", $transaction_id);
         $stmt->execute();

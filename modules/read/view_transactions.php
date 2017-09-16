@@ -3,6 +3,10 @@ if (!App::isLoggedIn())
     App::redirectTo("?");
 require_once WPATH . "modules/classes/Transactions.php";
 require_once WPATH . "modules/classes/System_Administration.php";
+require_once WPATH . "modules/classes/Users.php";
+require_once WPATH . "modules/classes/Books.php";
+$books = new Books();
+$users = new Users();
 $system_administration = new System_Administration();
 $transactions = new Transactions();
 
@@ -31,6 +35,7 @@ unset($_SESSION['transaction']);
 
                                 <tbody>
                                     <tr>
+                                        <th><h5>ID</h5></th>
                                         <th><h5>Transaction ID</h5></th>
                                         <th><h5>Buyer Type</h5></th> 
                                         <th><h5>Buyer's Name</h5></th> 
@@ -61,6 +66,7 @@ unset($_SESSION['transaction']);
                                         echo "<td> </td>";
                                         echo "<td> </td>";
                                         echo "<td> </td>";
+                                        echo "<td> </td>";
                                         echo "</tr>";
                                         unset($_SESSION['no_records']);
                                     } else if (isset($_SESSION['yes_records']) AND $_SESSION['yes_records'] == true) {
@@ -83,29 +89,37 @@ unset($_SESSION['transaction']);
 
                                                 $user_type_details = $system_administration->fetchUserTypeDetails($value2['buyer_type']);
 
-//                                                if ($user_type_details['name'] == "PUBLISHER") {
-//                                                    $institution_details = $users->fetchPublisherDetails($value2['reference_id']);
-//                                                    $institution_name = $institution_details['company_name'];
-//                                                } else if ($user_type_details['name'] == "BOOK SELLER") {
-//                                                    $institution_details = $users->fetchBookSellerDetails($value2['reference_id']);
-//                                                    $institution_name = $institution_details['company_name'];
-//                                                } else if ($user_type_details['name'] == "CORPORATE") {
-//                                                    $institution_details = $users->fetchCorporateDetails($value2['reference_id']);
-//                                                    $institution_name = $institution_details['company_name'];
-//                                                } else if ($user_type_details['name'] == "SELF PUBLISHER") {
-//                                                    $institution_details = $users->fetchSelfPublisherDetails($value2['reference_id']);
-//                                                    $institution_name = $institution_details['firstname'] . " " . $institution_details['lastname'];
-//                                                } else if ($user_type_details['name'] == "SCHOOL") {
-//                                                    $institution_details = $users->fetchSchoolDetails($value2['reference_id']);
-//                                                    $institution_name = $institution_details['school_name'];
-//                                                } else if ($user_type_details['name'] == "BOOKHIVE") {
-//                                                    $institution_name = "BOOKHIVE";
-//                                                }
+                                                if ($user_type_details['name'] == "STAFF") {
+                                                    $user_details = $users->fetchStaffDetails($value2['buyer_id']);
+                                                    $name = $user_details['firstname'] . " " . $user_details['lastname'];
+                                                } else if ($user_type_details['name'] == "PUBLISHER") {
+                                                    $user_details = $users->fetchSystemAdministratorDetails2($value2['buyer_type'], $value2['buyer_id']);
+                                                    $name = $user_details['firstname'] . " " . $user_details['lastname'];
+                                                } else if ($user_type_details['name'] == "SELF PUBLISHER") {
+                                                    $user_details = $users->fetchSelfPublisherDetails($value2['buyer_id']);
+                                                    $name = $user_details['firstname'] . " " . $user_details['lastname'];
+                                                } else if ($user_type_details['name'] == "BOOK SELLER") {
+                                                    $user_details = $users->fetchSystemAdministratorDetails2($value2['buyer_type'], $value2['buyer_id']);
+                                                    $name = $user_details['firstname'] . " " . $user_details['lastname'];
+                                                } else if ($user_type_details['name'] == "INDIVIDUAL USER") {
+                                                    $user_details = $users->fetchIndividualUserDetails($value2['buyer_id']);
+                                                    $name = $user_details['firstname'] . " " . $user_details['lastname'];
+                                                } else if ($user_type_details['name'] == "CORPORATE") {
+                                                    $user_details = $users->fetchSystemAdministratorDetails2($value2['buyer_type'], $value2['buyer_id']);
+                                                    $name = $user_details['firstname'] . " " . $user_details['lastname'];
+                                                } else if ($user_type_details['name'] == "SCHOOL") {
+                                                    $user_details = $users->fetchSystemAdministratorDetails2($value2['buyer_type'], $value2['buyer_id']);
+                                                    $name = $user_details['firstname'] . " " . $user_details['lastname'];
+                                                } else if ($user_type_details['name'] == "BOOKHIVE") {
+                                                    $user_details = $users->fetchSystemAdministratorDetails2($value2['buyer_type'], $value2['buyer_id']);
+                                                    $name = $user_details['firstname'] . " " . $user_details['lastname'];
+                                                }
 
                                                 echo "<tr>";
+                                                echo "<td>" . $value2['count'] . "</td>";
                                                 echo "<td> <a href='?view_individual_transaction&code=" . $value2['transaction_id'] . "'>" . $value2['transaction_id'] . "</td>";
                                                 echo "<td>" . $user_type_details['name'] . "</td>";
-                                                echo "<td>" . $value2['buyer_id'] . "</td>";
+                                                echo "<td>" . $name . "</td>";
                                                 echo "<td>" . $value2['amount'] . "</td>";
                                                 echo "<td>" . $value2['payment_option'] . "</td>";
 //                                            echo "<td>" . $value2['createdat'] . "</td>";
@@ -144,6 +158,7 @@ unset($_SESSION['transaction']);
 
                                 <tbody>
                                     <tr>
+                                        <th><h5>ID</h5></th>
                                         <th><h5>Transaction ID</h5></th>
                                         <th><h5>Buyer's Name</h5></th>
                                         <th><h5>Book Title</h5></th>
@@ -168,6 +183,7 @@ unset($_SESSION['transaction']);
                                     if (isset($_SESSION['no_records']) AND $_SESSION['no_records'] == true) {
                                         echo "<tr>";
                                         echo "<td>  No record found...</td>";
+                                        echo "<td> </td>";
                                         echo "<td> </td>";
                                         echo "<td> </td>";
                                         echo "<td> </td>";
@@ -201,10 +217,41 @@ unset($_SESSION['transaction']);
                                                 } else if ($value2['status'] == 1031) {
                                                     $delivery_status = "DELIVERY CONFIRMED";
                                                 }
+
+                                                $user_type_details = $system_administration->fetchUserTypeDetails($value2['buyer_type']);
+                                                $book_details = $books->fetchBookDetails($value2['book_id']);
+
+                                                if ($user_type_details['name'] == "STAFF") {
+                                                    $user_details = $users->fetchStaffDetails($value2['buyer_id']);
+                                                    $name = $user_details['firstname'] . " " . $user_details['lastname'];
+                                                } else if ($user_type_details['name'] == "PUBLISHER") {
+                                                    $user_details = $users->fetchSystemAdministratorDetails2($value2['buyer_type'], $value2['buyer_id']);
+                                                    $name = $user_details['firstname'] . " " . $user_details['lastname'];
+                                                } else if ($user_type_details['name'] == "SELF PUBLISHER") {
+                                                    $user_details = $users->fetchSelfPublisherDetails($value2['buyer_id']);
+                                                    $name = $user_details['firstname'] . " " . $user_details['lastname'];
+                                                } else if ($user_type_details['name'] == "BOOK SELLER") {
+                                                    $user_details = $users->fetchSystemAdministratorDetails2($value2['buyer_type'], $value2['buyer_id']);
+                                                    $name = $user_details['firstname'] . " " . $user_details['lastname'];
+                                                } else if ($user_type_details['name'] == "INDIVIDUAL USER") {
+                                                    $user_details = $users->fetchIndividualUserDetails($value2['buyer_id']);
+                                                    $name = $user_details['firstname'] . " " . $user_details['lastname'];
+                                                } else if ($user_type_details['name'] == "CORPORATE") {
+                                                    $user_details = $users->fetchSystemAdministratorDetails2($value2['buyer_type'], $value2['buyer_id']);
+                                                    $name = $user_details['firstname'] . " " . $user_details['lastname'];
+                                                } else if ($user_type_details['name'] == "SCHOOL") {
+                                                    $user_details = $users->fetchSystemAdministratorDetails2($value2['buyer_type'], $value2['buyer_id']);
+                                                    $name = $user_details['firstname'] . " " . $user_details['lastname'];
+                                                } else if ($user_type_details['name'] == "BOOKHIVE") {
+                                                    $user_details = $users->fetchSystemAdministratorDetails2($value2['buyer_type'], $value2['buyer_id']);
+                                                    $name = $user_details['firstname'] . " " . $user_details['lastname'];
+                                                }
+
                                                 echo "<tr>";
+                                                echo "<td>" . $value2['count'] . "</td>";
                                                 echo "<td> <a href='?view_individual_transaction&code=" . $value2['transaction_id'] . "'>" . $value2['transaction_id'] . "</td>";
-                                                echo "<td>" . $value2['buyer_id'] . "</td>";
-                                                echo "<td>" . $value2['book_id'] . "</td>";
+                                                echo "<td>" . $name . "</td>";
+                                                echo "<td>" . $book_details['title'] . "</td>";
                                                 echo "<td>" . $value2['quantity'] . "</td>";
 //                                                echo "<td>" . $value2['unit_price'] . "</td>";
                                                 echo "<td>" . $value2['createdat'] . "</td>";

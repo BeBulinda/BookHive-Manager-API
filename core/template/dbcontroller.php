@@ -2,8 +2,8 @@
 class DBController {
 	private $host = "localhost";
 	private $user = "root";
-	private $password = "sogoni1608";
-	private $database = "bookhive_v0.8";
+	private $password = "";
+	private $database = "bookhive";
 	private $conn;
 	
 //        private $host = "localhost";
