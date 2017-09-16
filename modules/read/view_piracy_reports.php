@@ -2,6 +2,8 @@
 if (!App::isLoggedIn())
     App::redirectTo("?");
 require_once WPATH . "modules/classes/Transactions.php";
+require_once WPATH . "modules/classes/System_Administration.php";
+$system_administration = new System_Administration();
 $transactions = new Transactions();
 
 unset($_SESSION['piracy_report']);
@@ -84,6 +86,7 @@ unset($_SESSION['piracy_report']);
                                             } else if ($value2['status'] == 1012) {
                                                 $status = "ASSIGNED";
                                             }
+                                            
                                             echo "<tr>";
 //                                            echo "<td> <a href='?individual_piracy_report&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
                                             echo "<td> <a href='#'>" . $value2['id'] . "</td>";

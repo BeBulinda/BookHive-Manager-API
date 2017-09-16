@@ -2,6 +2,10 @@
 if (!App::isLoggedIn())
     App::redirectTo("?");
 require_once WPATH . "modules/classes/Transactions.php";
+require_once WPATH . "modules/classes/Books.php";
+require_once WPATH . "modules/classes/Users.php";
+$users = new Users();
+$books = new Books();
 $transactions = new Transactions();
 
 unset($_SESSION['transaction_detail']);
@@ -19,13 +23,14 @@ unset($_SESSION['transaction_detail']);
                 <div class="widget-box">
                     <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
                         <h5>Transaction Details</h5>
-<?php require_once('modules/menus/sub-sub-menu-buttons.php'); ?>
+                        <?php require_once('modules/menus/sub-sub-menu-buttons.php'); ?>
                     </div>
                     <div class="widget-content nopadding">
 
                         <table class="table table-bordered data-table">
                             <tbody>
                                 <tr>
+                                    <th><h5>ID</h5></th>
                                     <th><h5>Transaction ID</h5></th>
                                     <th><h5>Book ID</h5></th>
                                     <th><h5>Print Type</h5></th>
@@ -49,6 +54,7 @@ unset($_SESSION['transaction_detail']);
                                 if (isset($_SESSION['no_records']) AND $_SESSION['no_records'] == true) {
                                     echo "<tr>";
                                     echo "<td>  No record found...</td>";
+                                    echo "<td> </td>";
                                     echo "<td> </td>";
                                     echo "<td> </td>";
                                     echo "<td> </td>";
@@ -80,14 +86,19 @@ unset($_SESSION['transaction_detail']);
                                             } else if ($value2['status'] == 1031) {
                                                 $delivery_status = "DELIVERY CONFIRMED";
                                             }
+                                            
+                                            $book_details = $books->fetchBookDetails($value2['book_id']);
+                                            $publisher_details = $users->fetchPublisherDetails($value2['publisher']);
+                                            
                                             echo "<tr>";
+                                            echo "<td>" . $value2['id'] . "</td>";
 //                                            echo "<td> <a href='?individual_transaction_detail&code=" . $value2['id'] . "'>" . $value2['transaction_id'] . "</td>";
                                             echo "<td>" . $value2['transaction_id'] . "</td>";
-                                            echo "<td>" . $value2['book_id'] . "</td>";
+                                            echo "<td>" . $book_details['title'] . "</td>";
                                             echo "<td>" . $value2['print_type'] . "</td>";
                                             echo "<td>" . $value2['unit_price'] . "</td>";
                                             echo "<td>" . $value2['quantity'] . "</td>";
-                                            echo "<td>" . $value2['publisher'] . "</td>";
+                                            echo "<td>" . $publisher_details['company_name'] . "</td>";
                                             echo "<td>" . $delivery_status . "</td>";
                                             echo "</tr>";
                                         }
