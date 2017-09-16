@@ -21,7 +21,7 @@ $results = $db_handle->runQuery($query);
         <link rel="stylesheet" href="web/css/fullcalendar.css" />
         <link rel="stylesheet" href="web/css/matrix-style.css" />
         <link rel="stylesheet" href="web/css/matrix-media.css" />
-        <link href="web/web/font-awesome/css/font-awesome.css" rel="stylesheet" />
+        <link href="web/font-awesome/css/font-awesome.css" rel="stylesheet" />
         <link rel="stylesheet" href="css/jquery.gritter.css" />
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,800' rel='stylesheet' type='text/css'>
         <!--Show Hide fields-->
@@ -34,7 +34,7 @@ $results = $db_handle->runQuery($query);
             function getState(val) {
                 $.ajax({
                     type: "POST",
-                    url: "http://localhost/bookhive_ui/core/template/get_state.php",
+                    url: "http://localhost:8081/bookhive_v1.0_api/core/template/get_state.php",
                     data: 'county_id=' + val,
                     success: function (data) {
                         $("#county-list").html(data);
@@ -44,7 +44,7 @@ $results = $db_handle->runQuery($query);
             function getLocation(val) {
                 $.ajax({
                     type: "POST",
-                    url: "http://localhost/bookhive_ui/core/template/get_location.php",
+                    url: "http://localhost:8081/bookhive_v1.0_api/core/template/get_location.php",
                     data: 'location_id=' + val,
                     success: function (data) {
                         $("#location-list").html(data);
