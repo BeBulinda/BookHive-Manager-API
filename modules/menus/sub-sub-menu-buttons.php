@@ -82,10 +82,10 @@ if (is_menu_set('?') != "") {
 //    $request_url = "?add_user_privilege";
 //    $action_holder = "Add User Privilege";   
 //} 
-
 else if ((is_menu_set('view_user_types') != "") OR ( is_menu_set('view_user_types_notifications') != "")) {
     $request_url = "?add_user_type";
     $action_holder = "Add User Type";
+    $csv_value = "csv_book_sellers";
 }
 ?>
 
@@ -95,5 +95,26 @@ else if ((is_menu_set('view_user_types') != "") OR ( is_menu_set('view_user_type
         <i class="fa fa-plus"></i> 
         <?php echo "View Privileges"; ?>
     </a>
+<?php } ?>
+
+<?php
+if (is_menu_set('view_book_sellers') != "" OR is_menu_set('view_books') != "" OR is_menu_set('view_contacts') != "" OR is_menu_set('view_corporates') != ""
+        OR is_menu_set('view_guest_users') != "" OR is_menu_set('view_inbox_messages') != "" OR is_menu_set('view_individual_users') != "" OR is_menu_set('view_locations') != ""
+        OR is_menu_set('view_piracy_reports') != "" OR is_menu_set('view_publishers') != "" OR is_menu_set('view_schools') != "" OR is_menu_set('view_self_publishers') != ""
+        OR is_menu_set('view_staff') != "" OR is_menu_set('view_system_administrators') != "" OR is_menu_set('view_transactions') != "" OR is_menu_set('view_transaction_details') != "") {
+    ?>
+
+
+
+    <form method="POST">
+        <input type="hidden" name="action" value="<?php echo $action_holder; ?>"/>
+        <input type="submit" name="create_csv" class="btn btn-success" value="Export CSV" />
+    </form>
+
+
+<!--    <a href="<?php // echo "?view_role_privileges"; ?>" class="btn btn-success sub-sub-menu-buttons">
+        <i class="fa fa-plus"></i> 
+    <?php // echo "Generate Excel"; ?>
+    </a>-->
 <?php } ?>
 

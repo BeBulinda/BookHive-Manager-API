@@ -67,7 +67,8 @@ unset($_SESSION['system_administrator']);
                                                 $status = "APPROVAL REJECTED";
                                             }
                                             echo "<tr>";
-                                            echo "<td> <a href='?individual_system_administrator&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+//                                            echo "<td> <a href='?individual_system_administrator&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+                                            echo "<td> <a href='#'>" . $value2['id'] . "</td>";
                                             echo "<td>" . $value2['firstname'] . " " . $value2['lastname'] . "</td>";
                                             echo "<td>" . $value2['reference_type'] . "</td>";
                                             echo "<td>" . $value2['phone_number'] . "</td>";

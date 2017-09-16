@@ -116,6 +116,33 @@ class Users extends Database {
         return $info[0];
     }
 
+    public function fetchBookSellerDetails($code) {
+        $sql = "SELECT * FROM book_sellers WHERE id=:code";
+        $stmt = $this->prepareQuery($sql);
+        $stmt->bindParam("code", $code);
+        $stmt->execute();
+        $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $info[0];
+    }
+
+    public function fetchCorporateDetails($code) {
+        $sql = "SELECT * FROM corporates WHERE id=:code";
+        $stmt = $this->prepareQuery($sql);
+        $stmt->bindParam("code", $code);
+        $stmt->execute();
+        $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $info[0];
+    }
+
+    public function fetchSchoolDetails($code) {
+        $sql = "SELECT * FROM schools WHERE id=:code";
+        $stmt = $this->prepareQuery($sql);
+        $stmt->bindParam("code", $code);
+        $stmt->execute();
+        $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $info[0];
+    }
+
     public function fetchStaffDetails($code) {
         $sql = "SELECT * FROM staff WHERE id=:code";
         $stmt = $this->prepareQuery($sql);

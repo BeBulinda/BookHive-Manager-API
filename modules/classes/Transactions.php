@@ -10,7 +10,84 @@ class Transactions extends Database {
             return $this->addTransaction();
         } else if ($_POST['action'] == "add_piracy_report") {
             return $this->addPiracyReport();
+        } else if ($_POST['action'] == "create_csv") {
+            
+            argDump("test");
+            argDump("test");
+            argDump("test");
+            argDump("test");
+            argDump("test");
+            exit();
+            
+            return $this->createCSV();
         }
+    }
+
+    private function createCSV() {
+        header('Content-Type: text/csv; charset=utf-8');
+        header('Content-Disposition: attachment; filename=data.csv');
+
+        $output = fopen("php://output", "w");
+        $fputcsv($output, array("Transaction ID", "Buyer's Name", "Book Title", "Quantity", "Unit Price", "Created At", "Status"));
+
+        if (isset($_SESSION['publisher_staff']) && $_SESSION['publisher_staff'] == true) {
+            $publisher_code = $_SESSION['user_details']['reference_id'];
+        } else {
+            $publisher_code = $_SESSION['userid'];
+        }
+
+        $transaction_data[] = $this->getAllPublisherTransactions($publisher_code);
+
+//        if (isset($_SESSION['no_records']) AND $_SESSION['no_records'] == true) {
+//            echo "<tr>";
+//            echo "<td>  No record found...</td>";
+//            echo "<td> </td>";
+//            echo "<td> </td>";
+//            echo "<td> </td>";
+//            echo "<td> </td>";
+//            echo "<td> </td>";
+//            echo "<td> </td>";
+//            echo "</tr>";
+//            unset($_SESSION['no_records']);
+//        } else if (isset($_SESSION['yes_records']) AND $_SESSION['yes_records'] == true) {
+            foreach ($transaction_data as $key => $value) {
+                $inner_array[$key] = json_decode($value, true); // this will give key val pair array
+                foreach ((array) $inner_array[$key] as $key2 => $value2) {
+                    if ($value2['status'] == 1000) {
+                        $delivery_status = "DELETED";
+                    } else if ($value2['status'] == 1001) {
+                        $delivery_status = "AWAITING APPROVAL";
+                    } else if ($value2['status'] == 1002) {
+                        $delivery_status = "NOT ACTIVE";
+                    } else if ($value2['status'] == 1021) {
+                        $delivery_status = "ACTIVE";
+                    } else if ($value2['status'] == 1010) {
+                        $delivery_status = "APPROVAL REJECTED";
+                    } else if ($value2['status'] == 1011) {
+                        $delivery_status = "DELIVERY IN PROGRESS";
+                    } else if ($value2['status'] == 1012) {
+                        $delivery_status = "ASSIGNED";
+                    } else if ($value2['status'] == 1030) {
+                        $delivery_status = "DELIVERY REJECTED";
+                    } else if ($value2['status'] == 1031) {
+                        $delivery_status = "DELIVERY CONFIRMED";
+                    }
+                    
+                    $fputcsv($output, $value2);
+//                    echo "<tr>";
+//                    echo "<td> <a href='#'>" . $value2['transaction_id'] . "</td>";
+//                    echo "<td>" . $value2['buyer_id'] . "</td>";
+//                    echo "<td>" . $value2['book_id'] . "</td>";
+//                    echo "<td>" . $value2['quantity'] . "</td>";
+////                                                echo "<td>" . $value2['unit_price'] . "</td>";
+//                    echo "<td>" . $value2['createdat'] . "</td>";
+//                    echo "<td>" . $delivery_status . "</td>";
+//                    echo "</tr>";
+                }
+                fclose($output);
+            }
+//            unset($_SESSION['yes_records']);
+//        }
     }
 
     public function fetchTransactionItemDetails($code) {
@@ -49,10 +126,10 @@ class Transactions extends Database {
     public function approveTransactionItem($code, $approval_comment, $delivery_time) {
         $transaction_item_details = $this->fetchTransactionItemDetails($code);
         $transaction_details = $this->fetchTransactionDetails($transaction_item_details['transaction_id']);
-        
+
         $users = new Users();
         $contact_details = $users->fetchIndividualContactDetails($transaction_details['buyer_type'], $transaction_details['buyer_id']);
-        
+
         $sql = "UPDATE transaction_details SET status=1011, authorizedat=:authorizedat, authorizedby=:authorizedby, approval_comment=:approval_comment, delivery_status=1011 WHERE id=:code";
         $stmt = $this->prepareQuery($sql);
         $stmt->bindValue("code", $code);
@@ -89,19 +166,19 @@ class Transactions extends Database {
     public function rejectTransactionItem($code, $approval_comment) {
         $transaction_item_details = $this->fetchTransactionItemDetails($code);
         $transaction_details = $this->fetchTransactionDetails($transaction_item_details['transaction_id']);
-        
+
         $users = new Users();
         $contact_details = $users->fetchIndividualContactDetails($transaction_details['buyer_type'], $transaction_details['buyer_id']);
-        
+
         $sql = "UPDATE transaction_details SET status=1010, authorizedat=:authorizedat, authorizedby=:authorizedby, approval_comment=:approval_comment, delivery_status=1010 WHERE id=:code";
         $stmt = $this->prepareQuery($sql);
         $stmt->bindValue("code", $code);
         $stmt->bindValue("authorizedby", 01); //  echo $_SESSION['userid']);
         $stmt->bindValue("authorizedat", date("Y-m-d H:i:s"));
         $stmt->bindValue("approval_comment", strtoupper($approval_comment));
-        
+
         if ($stmt->execute()) {
-           $sender = "hello@bookhivekenya.com";
+            $sender = "hello@bookhivekenya.com";
             $headers = "From: Bookhive Kenya <$sender>\r\n";
             $headers .= "MIME-Version: 1.0\r\n";
             $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";

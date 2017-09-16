@@ -2,6 +2,8 @@
 if (!App::isLoggedIn())
     App::redirectTo("?");
 require_once WPATH . "modules/classes/Transactions.php";
+require_once WPATH . "modules/classes/System_Administration.php";
+$system_administration = new System_Administration();
 $transactions = new Transactions();
 
 unset($_SESSION['transaction']);
@@ -78,9 +80,31 @@ unset($_SESSION['transaction']);
                                                 } else if ($value2['status'] == 1010) {
                                                     $status = "APPROVAL REJECTED";
                                                 }
+
+                                                $user_type_details = $system_administration->fetchUserTypeDetails($value2['buyer_type']);
+
+//                                                if ($user_type_details['name'] == "PUBLISHER") {
+//                                                    $institution_details = $users->fetchPublisherDetails($value2['reference_id']);
+//                                                    $institution_name = $institution_details['company_name'];
+//                                                } else if ($user_type_details['name'] == "BOOK SELLER") {
+//                                                    $institution_details = $users->fetchBookSellerDetails($value2['reference_id']);
+//                                                    $institution_name = $institution_details['company_name'];
+//                                                } else if ($user_type_details['name'] == "CORPORATE") {
+//                                                    $institution_details = $users->fetchCorporateDetails($value2['reference_id']);
+//                                                    $institution_name = $institution_details['company_name'];
+//                                                } else if ($user_type_details['name'] == "SELF PUBLISHER") {
+//                                                    $institution_details = $users->fetchSelfPublisherDetails($value2['reference_id']);
+//                                                    $institution_name = $institution_details['firstname'] . " " . $institution_details['lastname'];
+//                                                } else if ($user_type_details['name'] == "SCHOOL") {
+//                                                    $institution_details = $users->fetchSchoolDetails($value2['reference_id']);
+//                                                    $institution_name = $institution_details['school_name'];
+//                                                } else if ($user_type_details['name'] == "BOOKHIVE") {
+//                                                    $institution_name = "BOOKHIVE";
+//                                                }
+
                                                 echo "<tr>";
                                                 echo "<td> <a href='?view_individual_transaction&code=" . $value2['transaction_id'] . "'>" . $value2['transaction_id'] . "</td>";
-                                                echo "<td>" . $value2['buyer_type'] . "</td>";
+                                                echo "<td>" . $user_type_details['name'] . "</td>";
                                                 echo "<td>" . $value2['buyer_id'] . "</td>";
                                                 echo "<td>" . $value2['amount'] . "</td>";
                                                 echo "<td>" . $value2['payment_option'] . "</td>";
@@ -133,7 +157,11 @@ unset($_SESSION['transaction']);
 
                                     <?php
                                     if (!empty($_POST)) {
-                                        $transaction_data[] = $transactions->execute();
+                                        if (isset($_POST['create_csv'])) {
+                                            $info = $transactions->execute();
+                                        } else {
+                                            $transaction_data[] = $transactions->execute();
+                                        }
                                     } else {
                                         $transaction_data[] = $transactions->getAllPublisherTransactions($publisher_code);
                                     }
@@ -174,7 +202,7 @@ unset($_SESSION['transaction']);
                                                     $delivery_status = "DELIVERY CONFIRMED";
                                                 }
                                                 echo "<tr>";
-                                                echo "<td> <a href='#'>" . $value2['transaction_id'] . "</td>";
+                                                echo "<td> <a href='?view_individual_transaction&code=" . $value2['transaction_id'] . "'>" . $value2['transaction_id'] . "</td>";
                                                 echo "<td>" . $value2['buyer_id'] . "</td>";
                                                 echo "<td>" . $value2['book_id'] . "</td>";
                                                 echo "<td>" . $value2['quantity'] . "</td>";

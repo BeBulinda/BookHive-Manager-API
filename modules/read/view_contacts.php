@@ -1,6 +1,8 @@
 <?php
 if (!App::isLoggedIn()) App::redirectTo("?");
 require_once WPATH . "modules/classes/Users.php";
+require_once WPATH . "modules/classes/System_Administration.php";
+$system_administration = new System_Administration();
 $users = new Users();
 
 unset($_SESSION['contact']);
@@ -66,12 +68,18 @@ unset($_SESSION['contact']);
                                             } else if ($value2['status'] == 1010) {
                                                 $status = "APPROVAL REJECTED";
                                             }
+                                            
+                                            $county_details = $system_administration->fetchCountyDetails($value2['county']);
+                                            $sub_county_details = $system_administration->fetchSubCountyDetails($value2['sub_county']);
+                                            $location_details = $system_administration->fetchLocationDetails($value2['location']);
+                                            
                                             echo "<tr>";
-                                            echo "<td> <a href='?individual_contact&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+//                                            echo "<td> <a href='?individual_contact&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+                                            echo "<td> <a href='#'>" . $value2['id'] . "</td>";
                                             echo "<td>" . $value2['reference_type'] . "</td>";
                                             echo "<td>" . $value2['phone_number'] . "</td>";
                                             echo "<td>" . $value2['email'] . "</td>";
-                                            echo "<td>" . $value2['location'] . "</td>";
+                                            echo "<td>" . $location_details['name'] . ", " . $sub_county_details['name'] . " - " . $county_details['name'] . " COUNTY" . "</td>";
                                             echo "<td>" . $status . "</td>";
                                             echo "</tr>";
                                         }

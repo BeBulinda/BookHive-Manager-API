@@ -85,7 +85,8 @@ unset($_SESSION['piracy_report']);
                                                 $status = "ASSIGNED";
                                             }
                                             echo "<tr>";
-                                            echo "<td> <a href='?individual_piracy_report&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+//                                            echo "<td> <a href='?individual_piracy_report&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+                                            echo "<td> <a href='#'>" . $value2['id'] . "</td>";
                                             echo "<td>" . $value2['reporter_type'] . "</td>";
                                             echo "<td>" . $value2['reported_by'] . "</td>";
                                             echo "<td>" . $value2['seller_name'] . "</td>";

@@ -63,7 +63,8 @@ unset($_SESSION['user_type']);
                                                 $status = "APPROVAL REJECTED";
                                             }
                                             echo "<tr>";
-                                            echo "<td> <a href='?individual_user_type&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+//                                            echo "<td> <a href='?individual_user_type&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+                                            echo "<td> <a href='#'>" . $value2['id'] . "</td>";
                                             echo "<td>" . $value2['name'] . "</td>";
                                             echo "<td>" . $value2['createdat'] . "</td>";
                                             echo "<td>" . $status . "</td>";

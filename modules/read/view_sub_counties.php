@@ -64,10 +64,14 @@ unset($_SESSION['sub_county']);
                                             } else if ($value2['status'] == 1010) {
                                                 $status = "APPROVAL REJECTED";
                                             }
+                                            
+                                            $county_details = $system_administration->fetchCountyDetails($value2['county_id']);
+                                            
                                             echo "<tr>";
-                                            echo "<td> <a href='?individual_sub_county&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+//                                            echo "<td> <a href='?individual_sub_county&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+                                            echo "<td> <a href='#'>" . $value2['id'] . "</td>";
                                             echo "<td>" . $value2['name'] . "</td>";
-                                            echo "<td>" . $value2['county_id'] . "</td>";
+                                            echo "<td>" . $county_details['name'] . "</td>";
                                             echo "<td>" . $value2['createdat'] . "</td>";
                                             echo "<td>" . $status . "</td>";
                                             echo "</tr>";

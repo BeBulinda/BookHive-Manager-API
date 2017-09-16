@@ -63,7 +63,8 @@ unset($_SESSION['user_privilege']);
                                                 $status = "APPROVAL REJECTED";
                                             }
                                             echo "<tr>";
-                                            echo "<td> <a href='?individual_user_privilege&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+//                                            echo "<td> <a href='?individual_user_privilege&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+                                            echo "<td> <a href='#'>" . $value2['id'] . "</td>";
                                             echo "<td>" . $value2['privilege'] . "</td>";
                                             echo "<td>" . $value2['createdat'] . "</td>";
                                             echo "<td>" . $status . "</td>";

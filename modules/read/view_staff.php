@@ -1,6 +1,8 @@
 <?php
 if (!App::isLoggedIn()) App::redirectTo("?");
 require_once WPATH . "modules/classes/Users.php";
+require_once WPATH . "modules/classes/System_Administration.php";
+$system_administration = new System_Administration();
 $users = new Users();
 
 unset($_SESSION['staff']);
@@ -74,10 +76,32 @@ unset($_SESSION['staff']);
                                             } else if ($value2['status'] == 1010) {
                                                 $status = "APPROVAL REJECTED";
                                             }
+                                            
+                                            $user_type_details = $system_administration->fetchUserTypeDetails($value2['reference_type']);
+                                            if ($user_type_details['name'] == "PUBLISHER") {
+                                                $institution_details = $users->fetchPublisherDetails($value2['reference_id']);
+                                                $institution_name = $institution_details['company_name'];
+                                            } else if ($user_type_details['name'] == "BOOK SELLER") {
+                                                $institution_details = $users->fetchBookSellerDetails($value2['reference_id']);
+                                                $institution_name = $institution_details['company_name'];
+                                            } else if ($user_type_details['name'] == "CORPORATE") {
+                                                $institution_details = $users->fetchCorporateDetails($value2['reference_id']);
+                                                $institution_name = $institution_details['company_name'];
+                                            } else if ($user_type_details['name'] == "SELF PUBLISHER") {
+                                                $institution_details = $users->fetchSelfPublisherDetails($value2['reference_id']);
+                                                $institution_name = $institution_details['firstname'] . " " . $institution_details['lastname'];
+                                            } else if ($user_type_details['name'] == "SCHOOL") {
+                                                $institution_details = $users->fetchSchoolDetails($value2['reference_id']);
+                                                $institution_name = $institution_details['school_name'];
+                                            } else if ($user_type_details['name'] == "BOOKHIVE") {
+                                                $institution_name = "BOOKHIVE";
+                                            }
+                                            
                                             echo "<tr>";
-                                            echo "<td> <a href='?individual_staff&code=" . $value2['id'] . "'>" . $value2['firstname'] . " " . $value2['lastname'] . "</td>";
-                                            echo "<td>" . $value2['reference_type'] . "</td>";
-                                            echo "<td>" . $value2['reference_id'] . "</td>";
+//                                            echo "<td> <a href='?individual_staff&code=" . $value2['id'] . "'>" . $value2['firstname'] . " " . $value2['lastname'] . "</td>";
+                                            echo "<td> <a href='#'>" . $value2['firstname'] . " " . $value2['lastname'] . "</td>";
+                                            echo "<td>" . $user_type_details['name'] . "</td>";
+                                            echo "<td>" . $institution_name . "</td>";
                                             echo "<td>" . $value2['createdat'] . "</td>";
                                             echo "<td>" . $status . "</td>";
                                             echo "</tr>";

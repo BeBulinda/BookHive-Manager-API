@@ -27,9 +27,9 @@ unset($_SESSION['status']);
                                 <tr>
                                     <th><h5>Code</h5></th>
                                     <th><h5>Description</h5></th>
-                                    <th><h5>Update</h5></th>
+<!--                                    <th><h5>Update</h5></th>
                                     <th><h5>Activate</h5></th>
-                                    <th><h5>Delete</h5></th>
+                                    <th><h5>Delete</h5></th>-->
                                 </tr>
 
                                 <?php
@@ -42,9 +42,9 @@ unset($_SESSION['status']);
                                     echo "<tr>";
                                     echo "<td>  No record found...</td>";
                                     echo "<td> </td>";
-                                    echo "<td> </td>";
-                                    echo "<td> </td>";
-                                    echo "<td> </td>";
+//                                    echo "<td> </td>";
+//                                    echo "<td> </td>";
+//                                    echo "<td> </td>";
                                     echo "</tr>";
                                     unset($_SESSION['no_records']);
                                 } else if (isset($_SESSION['yes_records']) AND $_SESSION['yes_records'] == true) {
@@ -65,17 +65,18 @@ unset($_SESSION['status']);
 //                                                $status = "APPROVAL REJECTED";
 //                                            }
                                             echo "<tr>";
-                                            echo "<td> <a href='?individual_status&code=" . $value2['id'] . "'>" . $value2['status_code'] . "</td>";
+//                                            echo "<td> <a href='?individual_status&code=" . $value2['id'] . "'>" . $value2['status_code'] . "</td>";
+                                            echo "<td> <a href='#'>" . $value2['status_code'] . "</td>";
                                             echo "<td>" . $value2['description'] . "</td>";
-                                            echo "<td> <a href='?update_status&update_type=edit&code=" . $value2['id'] . "'> EDIT </td>";
-                                            
-                                            if ($value2['status'] == 1002) {
-                                                echo "<td> <a href='?update_status&update_type=activate&code=" . $value2['id'] . "'> ACTIVATE </td>";
-                                            } else if ($value2['status'] == 1021) { 
-                                                echo "<td> <a href='?update_status&update_type=deactivate&code=" . $value2['id'] . "'> DEACTIVATE </td>";
-                                            }
-                                            
-                                            echo "<td> <a href='?update_status&update_type=delete&code=" . $value2['id'] . "'> DElETE </td>";
+//                                            echo "<td> <a href='?update_status&update_type=edit&code=" . $value2['id'] . "'> EDIT </td>";
+//                                            
+//                                            if ($value2['status'] == 1002) {
+//                                                echo "<td> <a href='?update_status&update_type=activate&code=" . $value2['id'] . "'> ACTIVATE </td>";
+//                                            } else if ($value2['status'] == 1021) { 
+//                                                echo "<td> <a href='?update_status&update_type=deactivate&code=" . $value2['id'] . "'> DEACTIVATE </td>";
+//                                            }
+//                                            
+//                                            echo "<td> <a href='?update_status&update_type=delete&code=" . $value2['id'] . "'> DElETE </td>";
                                             echo "</tr>";
                                         }
                                     }

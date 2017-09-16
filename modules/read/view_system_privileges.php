@@ -64,10 +64,14 @@ unset($_SESSION['system_privilege']);
                                             } else if ($value2['status'] == 1010) {
                                                 $status = "APPROVAL REJECTED";
                                             }
+                                            
+                                            $component_details = $system_administration->fetchSystemComponentDetails($value2['component']);
+                                            
                                             echo "<tr>";
-                                            echo "<td> <a href='?individual_system_privilege&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+//                                            echo "<td> <a href='?individual_system_privilege&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+                                            echo "<td> <a href='#'>" . $value2['id'] . "</td>";
                                             echo "<td>" . $value2['name'] . "</td>";
-                                            echo "<td>" . $value2['component'] . "</td>";
+                                            echo "<td>" . $component_details['acronym'] . "</td>";
                                             echo "<td>" . $value2['createdat'] . "</td>";
                                             echo "<td>" . $status . "</td>";
                                             echo "</tr>";

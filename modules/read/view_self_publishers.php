@@ -36,8 +36,7 @@ unset($_SESSION['publisher']);
                             <tbody>
                                 <tr>
                                     <th><h5>ID</h5></th>
-                                    <th><h5>First Name</h5></th>
-                                    <th><h5>Last Name</h5></th>
+                                    <th><h5>Name</h5></th>
                                     <th><h5>Gender</h5></th>
                                     <th><h5>Created At</h5></th>
                                     <th><h5>Status</h5></th>
@@ -52,7 +51,6 @@ unset($_SESSION['publisher']);
                                 if (isset($_SESSION['no_records']) AND $_SESSION['no_records'] == true) {
                                     echo "<tr>";
                                     echo "<td>  No record found...</td>";
-                                    echo "<td> </td>";
                                     echo "<td> </td>";
                                     echo "<td> </td>";
                                     echo "<td> </td>";
@@ -77,9 +75,9 @@ unset($_SESSION['publisher']);
                                                 $status = "APPROVAL REJECTED";
                                             }
                                             echo "<tr>";
-                                            echo "<td> <a href='?individual_self_publisher&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
-                                            echo "<td>" . $value2['firstname'] . "</td>";
-                                            echo "<td>" . $value2['lastname'] . "</td>";
+//                                            echo "<td> <a href='?individual_self_publisher&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+                                            echo "<td> <a href='#'>" . $value2['id'] . "</td>";
+                                            echo "<td>" . $value2['firstname'] . " " . $value2['lastname'] . "</td>";
                                             echo "<td>" . $value2['gender'] . "</td>";
                                             echo "<td>" . $value2['createdat'] . "</td>";
                                             echo "<td>" . $status . "</td>";

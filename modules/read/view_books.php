@@ -47,10 +47,12 @@ unset($_SESSION['book']);
                                     <th><h5>ISBN Number</h5></th>
                                     <th><h5>Level</h5></th>
                                     <th><h5>Status</h5></th>
-                                    <?php if (isset($_SESSION['bookhive_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "BOOKHIVE") { ?> 
-                                        <th><h5>Approve</h5></th>
-                                        <th><h5>Reject</h5></th>
-                                    <?php } else if (isset($_SESSION['publisher_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "PUBLISHER") { ?> 
+                                    <?php // if (isset($_SESSION['bookhive_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "BOOKHIVE") { ?> 
+<!--                                        <th><h5>Approve</h5></th>
+                                        <th><h5>Reject</h5></th>-->
+                                    <?php // } else 
+                                        
+                                        if (isset($_SESSION['publisher_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "PUBLISHER") { ?> 
                                         <th><h5>Action</h5></th>
                                     <?php } ?>
                                 </tr>
@@ -79,10 +81,12 @@ unset($_SESSION['book']);
                                     echo "<td> </td>";
                                     echo "<td> </td>";
                                     echo "<td> </td>";
-                                    if (isset($_SESSION['bookhive_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "BOOKHIVE") {
-                                        echo "<td> </td>";
-                                        echo "<td> </td>";
-                                    } else if (isset($_SESSION['publisher_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "PUBLISHER") {
+//                                    if (isset($_SESSION['bookhive_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "BOOKHIVE") {
+//                                        echo "<td> </td>";
+//                                        echo "<td> </td>";
+//                                    } else 
+                                        
+                                        if (isset($_SESSION['publisher_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "PUBLISHER") {
                                         echo "<td> </td>";
                                     }
                                     echo "</tr>";
@@ -118,7 +122,8 @@ unset($_SESSION['book']);
                                             $book_level_details = $system_administration->fetchBookLevelDetails($value2['level_id']);
 
                                             echo "<tr>";
-                                            echo "<td> <a href='?individual_book&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+//                                            echo "<td> <a href='?individual_book&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+                                            echo "<td> <a href='#'>" . $value2['id'] . "</td>";
                                             echo "<td>" . $value2['title'] . "</td>";
 
                                             if (isset($_SESSION['publisher_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "PUBLISHER") {
@@ -130,18 +135,22 @@ unset($_SESSION['book']);
                                             echo "<td>" . $value2['isbn_number'] . "</td>";
                                             echo "<td>" . $book_level_details['name'] . "</td>";
                                             echo "<td>" . $status . "</td>";
-                                            if (isset($_SESSION['bookhive_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "BOOKHIVE") {
-                                                if ($value2['status'] == 1001) {
-                                                    echo "<td> <a href='?update_element&item=book&update_type=approve&code=" . $value2['id'] . "'> APPROVE </td>";
-                                                } else {
-                                                    echo "<td>" . $status . "</td>";
-                                                }
-                                                if ($value2['status'] == 1001) {
-                                                    echo "<td> <a href='?update_element&item=book&update_type=reject&code=" . $value2['id'] . "'> REJECT </td>";
-                                                } else {
-                                                    echo "<td>" . $status . "</td>";
-                                                }
-                                            } else if (isset($_SESSION['publisher_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "PUBLISHER") {
+//                                            if (isset($_SESSION['bookhive_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "BOOKHIVE") {
+//                                                if ($value2['status'] == 1001) {
+//                                                    echo "<td> <a href='?update_element&item=book&update_type=approve&code=" . $value2['id'] . "'> APPROVE </td>";
+//                                                } else {
+//                                                    echo "<td>" . $status . "</td>";
+//                                                }
+//                                                if ($value2['status'] == 1001) {
+//                                                    echo "<td> <a href='?update_element&item=book&update_type=reject&code=" . $value2['id'] . "'> REJECT </td>";
+//                                                } else {
+//                                                    echo "<td>" . $status . "</td>";
+//                                                }
+//                                            } else 
+                                                
+                                                
+                                                
+                                                if (isset($_SESSION['publisher_staff']) OR $_SESSION['logged_in_user_type_details']['name'] == "PUBLISHER") {
                                                 if ($value2['status'] == 1021) {
                                                     echo "<td> <a href='?update_element&item=book&update_type=deactivate&code=" . $value2['id'] . "'> DEACTIVATE </td>";
                                                 } else if ($value2['status'] == 1002) {

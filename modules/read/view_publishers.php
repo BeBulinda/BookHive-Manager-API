@@ -76,7 +76,8 @@ unset($_SESSION['publisher']);
                                                 $status = "APPROVAL REJECTED";
                                             }
                                             echo "<tr>";
-                                            echo "<td> <a href='?individual_publisher&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+//                                            echo "<td> <a href='?individual_publisher&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+                                            echo "<td> <a href='#'>" . $value2['id'] . "</td>";
                                             echo "<td>" . $value2['company_name'] . "</td>";
 //                                            echo "<td>" . $value2['phone_number'] . "</td>";
 //                                            echo "<td>" . $value2['email'] . "</td>";

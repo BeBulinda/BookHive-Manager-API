@@ -232,6 +232,15 @@ class System_Administration extends Database {
         return $info[0];
     }
 
+    public function fetchUserTypeDetails($code) {
+        $sql = "SELECT * FROM user_types WHERE id=:code";
+        $stmt = $this->prepareQuery($sql);
+        $stmt->bindParam("code", $code);
+        $stmt->execute();
+        $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $info[0];
+    }
+
     public function fetchStatusCodeDetails($code) {
         $sql = "SELECT * FROM status_codes WHERE id=:code";
         $stmt = $this->prepareQuery($sql);
@@ -852,6 +861,33 @@ class System_Administration extends Database {
 
     public function fetchCollectionPointDetails($code) {
         $sql = "SELECT * FROM collection_points WHERE id=:code";
+        $stmt = $this->prepareQuery($sql);
+        $stmt->bindParam("code", $code);
+        $stmt->execute();
+        $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $info[0];
+    }
+
+    public function fetchCountyDetails($code) {
+        $sql = "SELECT * FROM counties WHERE id=:code";
+        $stmt = $this->prepareQuery($sql);
+        $stmt->bindParam("code", $code);
+        $stmt->execute();
+        $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $info[0];
+    }
+
+    public function fetchSubCountyDetails($code) {
+        $sql = "SELECT * FROM sub_counties WHERE id=:code";
+        $stmt = $this->prepareQuery($sql);
+        $stmt->bindParam("code", $code);
+        $stmt->execute();
+        $info = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $info[0];
+    }
+
+    public function fetchLocationDetails($code) {
+        $sql = "SELECT * FROM locations WHERE id=:code";
         $stmt = $this->prepareQuery($sql);
         $stmt->bindParam("code", $code);
         $stmt->execute();

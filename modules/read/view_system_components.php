@@ -65,7 +65,8 @@ unset($_SESSION['system_component']);
                                                 $status = "APPROVAL REJECTED";
                                             }
                                             echo "<tr>";
-                                            echo "<td> <a href='?individual_system_component&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+//                                            echo "<td> <a href='?individual_system_component&code=" . $value2['id'] . "'>" . $value2['id'] . "</td>";
+                                            echo "<td> <a href='#'>" . $value2['id'] . "</td>";
                                             echo "<td>" . $value2['name'] . "</td>";
                                             echo "<td>" . $value2['acronym'] . "</td>";
                                             echo "<td>" . $value2['createdat'] . "</td>";
