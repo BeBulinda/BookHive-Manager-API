@@ -6,7 +6,7 @@ $currentPage = "";
 if (is_menu_set('logout') != "") 
     App::logOut();
 else if (is_menu_set('home') != "") {
-    $currentPage = WPATH . "modules/login.php";
+    $currentPage = WPATH . "modules/home.php";
     set_title("Bookhive | Login");
 }
 else if (is_menu_set('dashboard') != "") {
